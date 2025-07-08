@@ -1,5 +1,4 @@
-export default function handler (req, res) {
-
+export default function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
@@ -9,37 +8,63 @@ export default function handler (req, res) {
     return;
   }
 
+  const url = "https://feed-78c44-default-rtdb.firebaseio.com/users";
+  const { acao, nome, senha } = req.body;
 
-const url = "https://feed-78c44-default-rtdb.firebaseio.com/users"
+  if (acao === "login") {
+    fetch(`${url}/${nome}.json`)
+      .then(response => response.json())
+      .then(data => {
+        if (data) {
+          if (senha === data.senha) {
+            return res.status(200).json({ message: "Sucesso no login", login: true });
+          } else {
+            return res.status(400).json({ message: "Senha inválida", login: false });
+          }
+        } else {
+          return res.status(404).json({ message: "Usuário não existe" });
+        }
+      })
+      .catch(error => {
+        return res.status(500).json({ message: "Erro ao acessar o banco" });
+      });
+  }
 
-const { acao, nome, senha } = req.body 
+  else if (acao === "criar") {
+    const dados = { nome, senha };
+   //Verifica se já existe 
+    fetch(`${url}/${nome}.json`)
+      .then(response => response.json())
+      .then(data => {
+        if (data) {
 
-if(acao === "login") {
+          return res.status(400).json({ message: "Usuário já existe" });
 
-fetch(`${url}/${nome}.json`).then(response => response.json())
-.then(data => {
+        } else {
 
-if(data) {
+          // Aqui usamos PATCH pra criar diretamente em /users/nome
+          fetch(`${url}/${nome}.json`, {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(dados)
+          })
+            .then(() => {
 
-if (senha === data.senha) {
+              return res.status(201).json({ message: "Usuário criado com sucesso" });
 
-return res.status(200).json({message: "Sucesso no login", login: true})
-} else {
-return res.status(400).json({message: "erro no login: senha inválida.", login: false})
+            })
+            .catch(error => {
 
-}
+              return res.status(500).json({ message: "Erro ao salvar no banco" });
+            });
+        }
+      })
+      .catch(error => {
+        return res.status(500).json({ message: "Erro ao verificar usuário existente" });
+      });
+  }
 
-} else {
-
-return res.status(404).json({message: "Usuário não existe"})
-
-}
-
-})
-.catch(error => {
-return res.status(500).json({message: "erro ao acessar url do banco"})
-})
-
-}
-
+  else {
+    return res.status(400).json({ message: "Ação inválida" });
+  }
 }
