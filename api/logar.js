@@ -38,7 +38,7 @@ export default function handler(req, res) {
       .then(data => {
         if (data) {
 
-          return res.status(400).json({ message: "Usuário já existe" });
+          return res.status(400).json({ message: "Usuário já existe" , ok: false});
 
         } else {
 
@@ -50,21 +50,21 @@ export default function handler(req, res) {
           })
             .then(() => {
 
-              return res.status(201).json({ message: "Usuário criado com sucesso" });
+              return res.status(201).json({ message: "Usuário criado com sucesso" , ok: true});
 
             })
             .catch(error => {
 
-              return res.status(500).json({ message: "Erro ao salvar no banco" });
+              return res.status(500).json({ message: "Erro ao salvar no banco" , ok: false});
             });
         }
       })
       .catch(error => {
-        return res.status(500).json({ message: "Erro ao verificar usuário existente" });
+        return res.status(500).json({ message: "Erro ao verificar usuário existente", ok: false });
       });
   }
 
   else {
-    return res.status(400).json({ message: "Ação inválida" });
+    return res.status(400).json({ message: "Ação inválida" , ok: false});
   }
 }
