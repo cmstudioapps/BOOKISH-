@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BOOKISH - Login</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #7e57c2;
+            --primary-dark: #5e35b1;
+            --primary-light: #b39ddb;
+            --secondary: #4ECDC4;
+            --background: #121212;
+            --surface: #1e1e1e;
+            --text-primary: #e1e1e1;
+            --text-secondary: #a0a0a0;
+            --error: #FF6B6B;
+            --success: #66bb6a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--background);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+            padding: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            color: white;
+            text-decoration: none;
+            font-size: 1.5rem;
+        }
+
+        .logo i {
+            font-size: 2rem;
+        }
+
+        main {
+            flex: 1;
+            padding: 2rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(rgba(18,18,18,0.9), rgba(18,18,18,0.9));
+        }
+
+        .auth-container {
+            background-color: var(--surface);
+            padding: 2rem;
+            border-radius: 8px;
+            width: 100%;
+            max-width: 450px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .auth-title {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+            text-align: center;
+        }
+
+        .input-group {
+            margin-bottom: 1rem;
+            position: relative;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 1rem;
+            background: var(--background);
+            border: 1px solid #333;
+            border-radius: 6px;
+            color: var(--text-primary);
+            font-size: 1rem;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(126, 87, 194, 0.3);
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 0.8rem;
+            border-radius: 6px;
+            font-size: 1rem;
+            cursor: pointer;
+            border: none;
+            margin-top: 1rem;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .auth-toggle {
+            margin-top: 1rem;
+            text-align: center;
+            color: var(--text-secondary);
+        }
+
+        .auth-toggle a {
+            color: var(--secondary);
+            text-decoration: none;
+        }
+
+        .message {
+            padding: 0.8rem;
+            margin-bottom: 1rem;
+            border-radius: 6px;
+            text-align: center;
+        }
+
+        .error {
+            background-color: rgba(255, 107, 107, 0.1);
+            color: var(--error);
+            border: 1px solid var(--error);
+        }
+
+        .success {
+            background-color: rgba(78, 205, 196, 0.1);
+            color: var(--success);
+            border: 1px solid var(--success);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        footer {
+            background-color: var(--surface);
+            padding: 1.5rem;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+        }
+
+        @media (max-width: 768px) {
+            .auth-container {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="#" class="logo">
+            <i class="fas fa-book"></i>
+            BOOKISH
+        </a>
+    </header>
+
+    <main>
+        <div class="auth-container">
+            <!-- Formulário de Login -->
+            <div id="login-form">
+                <h1 class="auth-title">Acesse sua conta</h1>
+                <div id="login-message" class="message hidden"></div>
+
+                <div class="input-group">
+                    <label for="login-username">Nome de usuário</label>
+                    <input type="text" id="login-username" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="login-password">Senha</label>
+                    <input type="password" id="login-password" required>
+                </div>
+
+                <button class="btn btn-primary" id="login-button">Acessar</button>
+
+                <div class="auth-toggle">
+                    <span>Novo por aqui?</span>
+                    <a href="#" id="show-signup">Crie sua conta</a>
+                </div>
+            </div>
+
+            <!-- Formulário de Cadastro -->
+            <div id="signup-form" class="hidden">
+                <h1 class="auth-title">Crie sua conta</h1>
+                <div id="signup-message" class="message hidden"></div>
+
+                <div class="input-group">
+                    <label for="signup-username">Nome de usuário</label>
+                    <input type="text" id="signup-username" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="signup-password">Senha</label>
+                    <input type="password" id="signup-password" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="signup-key">Chave de acesso</label>
+                    <input type="text" id="signup-key" required>
+                </div>
+
+                <button class="btn btn-primary" id="signup-button">Criar conta</button>
+
+                <div class="auth-toggle">
+                    <span>Já tem uma conta?</span>
+                    <a href="#" id="show-login">Faça login</a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+
+
+    <script>
+        // Estado da aplicação
+        const appState = {
+            currentForm: 'login' // 'login' ou 'signup'
+        };
+
+        // Elementos do DOM
+        const loginForm = document.getElementById('login-form');
+        const signupForm = document.getElementById('signup-form');
+        const showSignup = document.getElementById('show-signup');
+        const showLogin = document.getElementById('show-login');
+        const loginMessage = document.getElementById('login-message');
+        const signupMessage = document.getElementById('signup-message');
+
+        // Alternar entre formulários
+        function toggleForms() {
+            if (appState.currentForm === 'login') {
+                loginForm.classList.add('hidden');
+                signupForm.classList.remove('hidden');
+                appState.currentForm = 'signup';
+            } else {
+                signupForm.classList.add('hidden');
+                loginForm.classList.remove('hidden');
+                appState.currentForm = 'login';
+            }
+        }
+
+        // Mostrar mensagem
+        function showMessage(element, message, isError = true) {
+            element.textContent = message;
+            element.classList.remove('hidden');
+            element.classList.remove('success', 'error');
+            element.classList.add(isError ? 'error' : 'success');
+        }
+
+        // Event Listeners
+        showSignup.addEventListener('click', function(e) {
+            e.preventDefault();
+            toggleForms();
+        });
+
+        showLogin.addEventListener('click', function(e) {
+            e.preventDefault();
+            toggleForms();
+        });
+
+        // Simulação de login/cadastro
+        document.getElementById('login-button').addEventListener('click', function() {
+            const username = document.getElementById('login-username').value;
+            const password = document.getElementById('login-password').value;
+            
+            if (!username || !password) {
+                showMessage(loginMessage, 'Preencha todos os campos');
+                return;
+            }
+            
+            showMessage(loginMessage, 'Login bem-sucedido (simulação)', false);
+        });
+
+        document.getElementById('signup-button').addEventListener('click', function() {
+            const username = document.getElementById('signup-username').value;
+            const password = document.getElementById('signup-password').value;
+            const key = document.getElementById('signup-key').value;
+            
+            if (!username || !password || !key) {
+                showMessage(signupMessage, 'Preencha todos os campos');
+                return;
+            }
+            
+            showMessage(signupMessage, 'Conta criada com sucesso (simulação)', false);
+        });
+    </script>
+</body>
+</html>
