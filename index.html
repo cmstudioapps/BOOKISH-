@@ -66,15 +66,19 @@
             width: 200px;
         }
 
-        .botao-escrever {
-            background-color: var(--primaria);
-            color: white;
-            padding: 8px 15px;
-            border-radius: 5px;
-            text-decoration: none;
-            font-weight: bold;
-            transition: background-color 0.3s;
-        }
+      .botao-escrever {
+  position: fixed;
+  bottom: 20px; /* Distância do rodapé */
+  right: 20px;  /* Distância da lateral direita */
+  background-color: var(--primaria);
+  color: white;
+  padding: 10px 20px;
+  border-radius: 5px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: background-color 0.3s;
+  z-index: 999; /* Garante que fique por cima de tudo */
+}
 
         .botao-escrever:hover {
             background-color: var(--primaria-escura);
@@ -274,9 +278,7 @@
             <div class="busca">
                 <input type="text" id="busca" placeholder="Buscar livros...">
             </div>
-            <a href="escrever.html" class="botao-escrever">
-                <i class="fas fa-pen"></i> Escrever
-            </a>
+
             <div class="perfil" id="perfil">
                 <i class="fas fa-user"></i>
             </div>
@@ -302,6 +304,9 @@
                 <p>Carregando livros...</p>
             </div>
         </div>
+            <a href="escrever.html" class="botao-escrever">
+              <i class="fas fa-pen"></i> criar
+            </a>
     </main>
 
     <script>
