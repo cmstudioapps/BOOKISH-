@@ -9,9 +9,12 @@ export default function handler(req, res) {
   }
 
   const url = "https://feed-78c44-default-rtdb.firebaseio.com/livros";
-  const { dados } = req.body;
+  
 
   if (req.method === "POST") {
+
+const { dados } = req.body;
+
     fetch(`${url}/${dados.id}.json`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
