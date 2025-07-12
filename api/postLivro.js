@@ -1,8 +1,6 @@
 export default function handler(req, res) {
-
-
-    res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'POST, GET,OPTIONS');
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 
   if (req.method === 'OPTIONS') {
@@ -11,40 +9,38 @@ export default function handler(req, res) {
   }
 
   const url = "https://feed-78c44-default-rtdb.firebaseio.com/livros";
+  const { dados } = req.body;
 
-const { dados } = req.body 
+  if (req.method === "POST") {
+    fetch(`${url}/${dados.id}.json`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(dados)
+    })
+    .then(response => response.json())
+    .then(data => {
+      return res.status(200).json({ ok: true, message: "Sucesso!" });
+    })
+    .catch(error => {
+      return res.status(500).json({ ok: false, message: "Erro ao encaminhar ao banco." });
+    });
 
-if(req.method === "POST") {
-fetch(`${url}/${dados.id}.json`, {
+    return; // 👈 ISSO AQUI É ESSENCIAL
+  }
 
-method: "PATCH",
-headers: { "Content-Type":"application/json" },
-body: JSON.stringify(dados)
-}).then(response => response.json())
-.then(data => {
+  if (req.method === "GET") {
+    fetch(`${url}.json`)
+    .then(response => response.json())
+    .then(data => {
+      return res.status(200).json(data);
+    })
+    .catch(error => {
+      return res.status(500).json({ ok: false, message: "Erro ao acessar." });
+    });
 
- return res.status(200).json({ok: true, message: "Sucesso!"})
+    return; // 👈 ISSO AQUI TAMBÉM
+  }
 
-}).catch(error => {
-
-return res.status(500).json({ok: false, message: "Erro ao encaminhar ao banco."})
-
-
-})
-}
-
-if(req.method === "GET") {
-
-fetch(`${url}.json`).then(response => response.json())
-.then(data => {
-
- return res.status(200).json(data)
-
-}).catch(error => {
-
-return res.status(500).json({ok: false, message: "Erro ao acessar."})
-
-
-})
-}
+  // 👇 Se chegar aqui, é porque o método não é suportado.
+  return res.status(405).json({ ok: false, message: "Método não permitido." });
 }
