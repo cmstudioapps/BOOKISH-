@@ -5,387 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Escritor Criativo</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        :root {
-            --primary: #7e57c2;
-            --primary-dark: #5e35b1;
-            --primary-light: #b39ddb;
-            --background: #121212;
-            --surface: #1e1e1e;
-            --text-primary: #e1e1e1;
-            --text-secondary: #a0a0a0;
-            --success: #66bb6a;
-            --warning: #ffa726;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        body {
-            background-color: var(--background);
-            color: var(--text-primary);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-
-        header {
-            background: linear-gradient(135deg, var(--primary-dark), var(--primary));
-            padding: 1.5rem;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-            position: relative;
-            overflow: hidden;
-            z-index: 1;
-        }
-
-        header::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path fill="rgba(255,255,255,0.05)" d="M0,0 L100,0 L100,100 L0,100 Z" /></svg>') repeat;
-            z-index: -1;
-        }
-
-        .header-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            animation: fadeIn 1s ease-out;
-        }
-
-        .logo i {
-            font-size: 2rem;
-        }
-
-        .logo h1 {
-            font-weight: 300;
-            letter-spacing: 1px;
-        }
-
-        .logo span {
-            font-weight: 600;
-        }
-
-        .inspiration-quote {
-            font-style: italic;
-            opacity: 0.8;
-            font-size: 0.9rem;
-            text-align: center;
-            margin-top: 0.5rem;
-            animation: fadeIn 2s ease-out;
-        }
-
-        main {
-            flex: 1;
-            padding: 2rem;
-            max-width: 1200px;
-            margin: 0 auto;
-            width: 100%;
-        }
-
-        .writing-container {
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-        }
-
-        .input-group {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
-
-        .input-group label {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-size: 1rem;
-            color: var(--primary-light);
-        }
-
-        .input-group label i {
-            font-size: 1.1rem;
-        }
-
-        input, textarea {
-            background-color: var(--surface);
-            border: 1px solid #333;
-            border-radius: 6px;
-            padding: 1rem;
-            color: var(--text-primary);
-            font-size: 1rem;
-            transition: all 0.3s ease;
-        }
-
-        input:focus, textarea:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 2px rgba(126, 87, 194, 0.3);
-        }
-
-        input {
-            height: 50px;
-        }
-
-        textarea {
-            min-height: 200px;
-            resize: vertical;
-        }
-
-        #content {
-            min-height: 400px;
-        }
-
-        /* Estilos para o upload de imagem */
-        .cover-upload {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-
-        .upload-area {
-            border: 2px dashed #444;
-            border-radius: 8px;
-            padding: 2rem;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            background-color: var(--surface);
-            position: relative;
-            overflow: hidden;
-            min-height: 200px;
-        }
-
-        .upload-area:hover {
-            border-color: var(--primary);
-            background-color: #252525;
-        }
-
-        .upload-area i {
-            font-size: 3rem;
-            color: var(--primary-light);
-            margin-bottom: 1rem;
-            transition: all 0.3s ease;
-        }
-
-        .upload-area:hover i {
-            color: var(--primary);
-            transform: translateY(-5px);
-        }
-
-        .upload-text {
-            margin-bottom: 0.5rem;
-        }
-
-        .upload-hint {
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-        }
-
-        #coverInput {
-            display: none;
-        }
-
-        .preview-container {
-            width: 100%;
-            margin-top: 1rem;
-            position: relative;
-            display: none;
-        }
-
-        #imagePreview {
-            max-width: 100%;
-            max-height: 300px;
-            border-radius: 6px;
-            object-fit: contain;
-            display: block;
-            margin: 0 auto;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-        }
-
-        .remove-image {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background-color: rgba(0, 0, 0, 0.7);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .remove-image:hover {
-            background-color: rgba(255, 0, 0, 0.7);
-            transform: rotate(90deg);
-        }
-
-        .buttons {
-            display: flex;
-            gap: 1rem;
-            margin-top: 1rem;
-            flex-wrap: wrap;
-        }
-
-        .btn {
-            padding: 0.8rem 1.5rem;
-            border-radius: 6px;
-            font-size: 1rem;
-            font-weight: 500;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            transition: all 0.3s ease;
-            border: none;
-        }
-
-        .btn-primary {
-            background-color: var(--primary);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background-color: var(--primary-dark);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
-
-        .btn-secondary {
-            background-color: var(--surface);
-            color: var(--text-primary);
-            border: 1px solid #333;
-        }
-
-        .btn-secondary:hover {
-            background-color: #2a2a2a;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
-
-        .word-count {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            margin-top: 0.5rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .floating-inspiration {
-            position: fixed;
-            bottom: 2rem;
-            right: 2rem;
-            background: var(--surface);
-            border-radius: 50%;
-            width: 60px;
-            height: 60px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-            cursor: pointer;
-            transition: all 0.3s ease;
-            z-index: 10;
-        }
-
-        .floating-inspiration:hover {
-            background: var(--primary);
-            transform: scale(1.1) rotate(10deg);
-        }
-
-        .floating-inspiration i {
-            font-size: 1.5rem;
-            color: var(--primary-light);
-        }
-
-        .floating-inspiration:hover i {
-            color: white;
-            animation: pulse 1.5s infinite;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
-        }
-
-        @media (max-width: 768px) {
-            .header-content {
-                flex-direction: column;
-                text-align: center;
-                gap: 1rem;
-            }
-
-            .buttons {
-                flex-direction: column;
-            }
-
-            .btn {
-                width: 100%;
-                justify-content: center;
-            }
-
-            main {
-                padding: 1.5rem;
-            }
-
-            .upload-area {
-                padding: 1.5rem;
-            }
-        }
-
-        /* Efeito de digitação para a sinopse */
-        #synopsis {
-            position: relative;
-        }
-
-        #synopsis::after {
-            content: '';
-            position: absolute;
-            right: 1rem;
-            bottom: 1rem;
-            width: 20px;
-            height: 20px;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23b39ddb'%3E%3Cpath d='M17 8h2c1.1 0 2 .9 2 2v9c0 1.1-.9 2-2 2H5c-1.1 0-2-.9-2-2V5c0-1.1.9-2 2-2h9v2H5v14h14v-9z'/%3E%3Cpath d='M20.1 3.9L15 9l1.4 1.4 5.1-5.1z'/%3E%3C/svg%3E");
-            background-size: contain;
-            opacity: 0.5;
-            transition: opacity 0.3s;
-        }
-
-        #synopsis:focus::after {
-            opacity: 0;
-        }
-    </style>
+    <link rel="stylesheet" href="escrever.css" type="text/css" media="all" />
+    <script src="https://caiolibs.vercel.app/Bs.js"></script>
+    <script src="https://caiolibs.vercel.app/spinner.js"></script>
+    <script src="https://caiolibs.vercel.app/id.js"></script>
+ <script src="https://caiolibs.vercel.app/ch.js"></script>
 </head>
 <body>
     <header>
@@ -401,29 +25,39 @@
     <main>
         <div class="writing-container">
             <div class="input-group cover-upload">
-                <label for="coverInput"><i class="fas fa-image"></i> Imagem de Capa</label>
-                <div class="upload-area" id="uploadArea">
+                <label for="InputImage"><i class="fas fa-image"></i> Imagem de Capa</label>
+                <div class="upload-area" id="uploadArea" onclick="uploadArea()">
                     <i class="fas fa-cloud-upload-alt"></i>
                     <div class="upload-text">Arraste e solte sua imagem aqui ou clique para selecionar</div>
-                    <div class="upload-hint">Formatos suportados: JPG, PNG (Máx. 5MB)</div>
-                    <input type="file" id="coverInput" accept="image/jpeg, image/png">
+                    <div class="upload-hint">Formatos suportados: JPG, PNG (Máx. 1MB)</div>
+                    <input type="file" id="InputImage" accept="image/jpeg, image/png">
                 </div>
                 <div class="preview-container" id="previewContainer">
-                    <img id="imagePreview" alt="Pré-visualização da capa">
+                <img id="imagePreview" alt="Pré-visualização da capa">
                     <button class="remove-image" id="removeImageBtn">
                         <i class="fas fa-times"></i>
                     </button>
                 </div>
+                <label for="gerarImage">OU</label>
+                <details>
+            <summary>
+                Gerar Imagem com IA
+            </summary>
+            <input type="text" name="" id="instrucao" placeholder="Como você quer a imagem?"/>
+              <button id="gerarImage"  onclick="gerarImage()">Confirmar</button>
+                </details>
             </div>
 
             <div class="input-group">
                 <label for="title"><i class="fas fa-heading"></i> Título</label>
-                <input type="text" id="title" placeholder="Dê um título inspirador à sua obra...">
+                <input type="text" id="titulo" placeholder="Dê um título inspirador à sua obra...">
             </div>
 
             <div class="input-group">
                 <label for="synopsis"><i class="fas fa-align-left"></i> Sinopse</label>
-                <textarea id="synopsis" placeholder="Descreva brevemente sua história..."></textarea>
+                <textarea id="sinopse" placeholder="Descreva brevemente sua história..."></textarea>
+                <label for="genero">Gênero:</label>
+                <input type="text" id="genero" value="Romance, ficção científica, terror..." />
             </div>
 
             <div class="input-group">
@@ -436,10 +70,10 @@
             </div>
 
             <div class="buttons">
-                <button class="btn btn-primary" id="publishBtn">
+                <button class="btn btn-primary" id="publishBtn" onclick="publicar()">
                     <i class="fas fa-paper-plane"></i> Publicar
                 </button>
-                <button class="btn btn-secondary" id="correctBtn">
+                <button class="btn btn-secondary" id="correctBtn" onclick="corrigir()">
                     <i class="fas fa-spell-check"></i> Corrigir
                 </button>
             </div>
@@ -449,5 +83,6 @@
     <div class="floating-inspiration" title="Precisa de inspiração?">
         <i class="fas fa-lightbulb"></i>
     </div>
+    <script src="escrever.js"></script>
 </body>
 </html>
