@@ -20,7 +20,7 @@ export default function handler(req, res) {
     fetch(`https://api.spiderx.com.br/api/ai/pixart?text=${encodeURIComponent(pre_prompt)}&api_key=${API_KEY}`)
       .then((response) => response.json())
       .then((data) => {
-        return res.status(200).json({ data });
+        return res.status(200).json({ data.image });
       })
       .catch((error) => {
         return res.status(500).json({ erro: "Erro ao gerar imagem", detalhes: error.message });
