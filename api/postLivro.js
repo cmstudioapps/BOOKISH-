@@ -14,7 +14,7 @@ export default function handler(req, res) {
 
 const { dados } = req.body 
 
-fetch(``, {
+fetch(`${url}/${dados.id}.json`, {
 
 method: "PATCH",
 headers: { "Content-Type":"application/json" },
