@@ -36,7 +36,7 @@ Meu texto: ${contexto || "sem texto!"}`;
       return res.status(500).json({ erro: "Resposta inesperada da API", dadosRecebidos: data });
     }
 
-    return res.status(200).json({ image: data.image });
+    return res.status(200).json({ img: data.image });
 
   } catch (error) {
     return res.status(500).json({ erro: "Erro ao gerar imagem", detalhes: error.message });
