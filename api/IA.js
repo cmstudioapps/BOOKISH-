@@ -42,30 +42,57 @@ Meu texto: ${contexto || "sem texto!"}`;
 }
 
 
-if(acao === "corrigir") {
-const pre_prompt = `
+if (acao === "corrigir") {
+  if (!contexto) return res.status(400).json({ erro: "Texto vazio" });
+
+  const blocos = dividirTexto(contexto, 1000); // Divide o texto a cada 1000 caracteres
+  const resultados = [];
+
+  // Função assíncrona para processar cada bloco
+  const corrigirBloco = async (bloco) => {
+    const pre_prompt = `
 Corrija os erros gramaticais e ortográficos do texto a seguir. 
 Não adicione explicações, nem mensagens extras. 
 Retorne apenas o texto corrigido completo, sem rodeios, sem introdução ou conclusão.
 
-Texto: "${contexto}"
+Texto: "${bloco}"
 ${instrucao ? `\nInstruções: "${instrucao}"` : ""}
-`.trim();
+    `.trim();
 
-fetch(`https://api.spiderx.com.br/api/ai/gemini?api_key=${API_KEY}`, {
- method: "POST",
- headers: {
-   "Content-Type": "application/json"
-  },
-  body: JSON.stringify({
-   text: pre_prompt.trim()
-  })
- })
- .then((response) => response.json())
- .then((data) => { 
-return res.status(200).json({resposta: data.response}) 
-}) 
- 
+    const resposta = await fetch(`https://api.spiderx.com.br/api/ai/gemini?api_key=${API_KEY}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ text: pre_prompt })
+    });
 
+    const data = await resposta.json();
+    return data.response || "";
+  };
+
+  // Processa blocos um por um (em sequência)
+  (async () => {
+    for (const bloco of blocos) {
+      const corrigido = await corrigirBloco(bloco);
+      resultados.push(corrigido);
+    }
+
+    const textoFinal = resultados.join(" ").trim();
+    return res.status(200).json({ resposta: textoFinal });
+
+  })().catch(err => {
+    console.error("🔥 Erro ao corrigir texto:", err);
+    return res.status(500).json({ erro: "Erro na correção por blocos" });
+  });
+}
+
+// Função pra dividir texto
+function dividirTexto(texto, tamanho = 1000) {
+  const blocos = [];
+  for (let i = 0; i < texto.length; i += tamanho) {
+    blocos.push(texto.slice(i, i + tamanho));
+  }
+  return blocos;
 }
 }
