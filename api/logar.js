@@ -17,7 +17,7 @@ export default function handler(req, res) {
       .then(data => {
         if (data) {
           if (senha === data.senha) {
-            return res.status(200).json({ message: "Sucesso no login", login: true });
+            return res.status(200).json({ message: "Sucesso no login", login: true, nome: data.nome, senha: data.senha});
           } else {
             return res.status(400).json({ message: "Senha inválida", login: false });
           }
