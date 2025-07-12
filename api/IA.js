@@ -8,7 +8,7 @@ export default function handler (req, res) {
     res.status(200).end();
     return;
   }
-
+const API_KEY = "inNJuHmF7ffkiZBxdN28"
 const { dados } = req.body 
 const { acao, contexto } = dados
 
