@@ -9,12 +9,8 @@ export default function handler(req, res) {
   }
 
   const API_KEY = "inNJuHmF7ffkiZBxdN28";
-  const { dados } = req.body;
-if(!dados) {
-return res.status(200).json({message: "falta dados"})
-}
-  const { acao, contexto, instrucao } = dados;
-
+  const { acao, contexto, instrucao } = req.body;
+  
   if (acao === "image") {
     const pre_prompt = `Observe o texto que eu desenvolvi até agora e gere uma imagem vertical atendendo também as minhas instruções, porem usando o texto como 'contexto'.
       Minhas instruções: ${instrucao}.
