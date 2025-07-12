@@ -10,7 +10,7 @@ export default function handler (req, res) {
   }
 const API_KEY = "inNJuHmF7ffkiZBxdN28"
 const { dados } = req.body 
-const { acao, contexto } = dados
+const { acao, contexto, instrucao } = dados
 
 if(acao === "image") {
 
@@ -18,7 +18,13 @@ const pre_prompt = `Observe o texto que eu desenvolvi até agora e gere uma imag
     Minhas instruções: ${instrucao}.
     Meu texto: ${contexto}
   `
+fetch(`https://api.spiderx.com.br/api/ai/pixart?text=${encodeURIComponent(pre_prompt)}&api_key=${API_KEY}`) 
+ .then((response) => response.json()) 
+ .then((data) => {
+  
+return res.status(200).json({data})
 
+}) 
 
 }
 
