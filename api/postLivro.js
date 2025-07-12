@@ -1,4 +1,4 @@
-expor default function handler(req, res) {
+export default function handler(req, res) {
 
 
     res.setHeader('Access-Control-Allow-Origin', '*');
