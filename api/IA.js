@@ -46,7 +46,7 @@ if(acao === "corrigir") {
 const pre_prompt = `
 Corrija os erros gramaticais e ortográficos do texto a seguir. 
 Não adicione explicações, nem mensagens extras. 
-Retorne apenas o texto corrigido, sem rodeios, sem introdução ou conclusão.
+Retorne apenas o texto corrigido completo, sem rodeios, sem introdução ou conclusão.
 
 Texto: "${contexto}"
 ${instrucao ? `\nInstruções: "${instrucao}"` : ""}
