@@ -18,7 +18,7 @@ fetch(`${url}/${dados.id}.json`, {
 
 method: "PATCH",
 headers: { "Content-Type":"application/json" },
-body: JSON.stringify({dados})
+body: JSON.stringify(dados)
 }).then(response => response.json())
 .then(data => {
 
