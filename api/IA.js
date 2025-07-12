@@ -14,9 +14,8 @@ export default function handler(req, res) {
   const API_KEY = "inNJuHmF7ffkiZBxdN28";
   const { acao, contexto, instrucao } = req.body;
 
-  if (acao !== "image") {
-    return res.status(400).json({ erro: "Ação inválida." });
-  }
+  if (acao === "image") {
+    
 
   const pre_prompt = `Observe o texto que eu desenvolvi até agora e gere uma imagem vertical atendendo também as minhas instruções, porém usando o texto como 'contexto'.
 Minhas instruções: ${instrucao}.
@@ -40,4 +39,31 @@ Meu texto: ${contexto || "sem texto!"}`;
     .catch(error => {
       res.status(500).json({ erro: "Erro ao gerar imagem", detalhes: error.message });
     });
+}
+
+
+if(acao === "corrigir") {
+const pre_prompt = `Corrija os erros gramaticais e ortográficos do texto a seguir. Não adicione explicações, nem mensagens extras. Retorne apenas o texto corrigido, sem rodeios, sem introdução ou conclusão.\n 
+Texto: "${contexto}"
+
+Instruções: "${instrucao || "Deixe original"}"
+
+`;
+
+fetch(`https://api.spiderx.com.br/api/ai/gemini?api_key=${API_KEY}`, {
+ method: "POST",
+ headers: {
+   "Content-Type": "application/json"
+  },
+  body: JSON.stringify({
+   text: pre_prompt.trim()
+  })
+ })
+ .then((response) => response.json())
+ .then((data) => { 
+return res.status(200).json({resposta: data.response}) 
+}) 
+ 
+
+}
 }
