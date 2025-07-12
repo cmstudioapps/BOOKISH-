@@ -1,0 +1,438 @@
+:root {
+    --primaria: #8a2be2;
+    --primaria-escura: #6a1b9a;
+    --fundo: #121212;
+    --superficie: #1e1e1e;
+    --texto: #ffffff;
+    --texto-secundario: #a0a0a0;
+    --sombra: 0 4px 6px rgba(0, 0, 0, 0.3);
+    --borda: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+body {
+    background-color: var(--fundo);
+    color: var(--texto);
+    line-height: 1.6;
+}
+
+.cabecalho {
+    background-color: var(--superficie);
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: var(--sombra);
+}
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--primaria);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+}
+
+.logo i {
+    margin-right: 10px;
+}
+
+.menu-superior {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.busca {
+    display: flex;
+    align-items: center;
+}
+
+.busca input {
+    padding: 10px 15px;
+    border-radius: 20px;
+    border: var(--borda);
+    background-color: var(--fundo);
+    color: var(--texto);
+    width: 200px;
+    transition: all 0.3s ease;
+}
+
+.busca input:focus {
+    outline: none;
+    border-color: var(--primaria);
+    box-shadow: 0 0 0 2px rgba(138, 43, 226, 0.3);
+}
+
+.botao-escrever {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: var(--primaria);
+    color: white;
+    padding: 12px 24px;
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 12px rgba(138, 43, 226, 0.3);
+}
+
+.botao-escrever:hover {
+    background-color: var(--primaria-escura);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(138, 43, 226, 0.4);
+}
+
+.perfil {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--primaria);
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.perfil:hover {
+    transform: scale(1.1);
+}
+
+.perfil i {
+    font-size: 1.2rem;
+    color: white;
+}
+
+.conteudo-principal {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.destaque {
+    background-color: var(--superficie);
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 30px;
+    display: flex;
+    gap: 20px;
+    box-shadow: var(--sombra);
+}
+
+.destaque-capa {
+    width: 200px;
+    height: 300px;
+    object-fit: cover;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.destaque-info {
+    flex: 1;
+}
+
+.destaque-titulo {
+    font-size: 1.8rem;
+    margin-bottom: 10px;
+    color: var(--primaria);
+}
+
+.destaque-autor {
+    font-size: 1.2rem;
+    margin-bottom: 15px;
+    color: var(--texto-secundario);
+}
+
+.destaque-descricao {
+    margin-bottom: 20px;
+    line-height: 1.5;
+}
+
+.destaque-generos {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
+
+.genero {
+    background-color: var(--primaria);
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+}
+
+.botao {
+    display: inline-block;
+    background-color: var(--primaria);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.botao:hover {
+    background-color: var(--primaria-escura);
+    transform: translateY(-2px);
+}
+
+.filtros {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.filtro {
+    background-color: var(--superficie);
+    border: var(--borda);
+    color: var(--texto);
+    padding: 8px 15px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.filtro:hover {
+    background-color: rgba(138, 43, 226, 0.1);
+}
+
+.filtro.ativo {
+    background-color: var(--primaria);
+    border-color: var(--primaria);
+}
+
+/* ESTILOS MELHORADOS PARA OS CARDS DE LIVROS */
+.grade-livros {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 25px;
+    margin-bottom: 40px;
+}
+
+.livro {
+    background-color: var(--superficie);
+    border-radius: 10px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    box-shadow: var(--sombra);
+    position: relative;
+    border: var(--borda);
+}
+
+.livro:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+    border-color: rgba(138, 43, 226, 0.3);
+}
+
+.livro-capa-container {
+    position: relative;
+    overflow: hidden;
+    height: 300px;
+}
+
+.livro-capa {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.livro:hover .livro-capa {
+    transform: scale(1.05);
+}
+
+.livro-avaliacao {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: rgba(0, 0, 0, 0.7);
+    padding: 5px 8px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.8rem;
+    color: #ffd700;
+}
+
+.livro-avaliacao i {
+    font-size: 0.7rem;
+}
+
+.livro-info {
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.livro-titulo {
+    font-size: 1.05rem;
+    font-weight: 600;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.livro-autor {
+    font-size: 0.85rem;
+    color: var(--texto-secundario);
+    margin: 0;
+}
+
+.livro-preco {
+    font-size: 1rem;
+    font-weight: bold;
+    color: var(--primaria);
+    margin-top: 5px;
+}
+
+.livro-generos {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-top: 5px;
+}
+
+.livro-genero {
+    background-color: rgba(138, 43, 226, 0.2);
+    color: var(--primaria);
+    padding: 3px 8px;
+    border-radius: 20px;
+    font-size: 0.7rem;
+}
+
+.livro-acoes {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+.livro-botao {
+    background-color: transparent;
+    border: 1px solid var(--primaria);
+    color: var(--primaria);
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.livro-botao:hover {
+    background-color: var(--primaria);
+    color: white;
+}
+
+.livro-favorito {
+    background: none;
+    border: none;
+    color: var(--texto-secundario);
+    cursor: pointer;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.livro-favorito.ativo {
+    color: #ff4081;
+}
+
+.carregando {
+    text-align: center;
+    padding: 50px;
+    grid-column: 1 / -1;
+    color: var(--texto-secundario);
+}
+
+/* EFEITO DE CARREGAMENTO PARA OS CARDS */
+@keyframes pulse {
+    0% { opacity: 0.6; }
+    50% { opacity: 1; }
+    100% { opacity: 0.6; }
+}
+
+.carregando .livro {
+    animation: pulse 1.5s infinite ease-in-out;
+    background-color: var(--superficie);
+}
+
+/* RESPONSIVIDADE */
+@media (max-width: 768px) {
+    .destaque {
+        flex-direction: column;
+    }
+    
+    .destaque-capa {
+        width: 100%;
+        height: auto;
+        max-height: 400px;
+    }
+    
+    .grade-livros {
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+        gap: 15px;
+    }
+
+    .menu-superior {
+        gap: 10px;
+    }
+
+    .busca input {
+        width: 150px;
+    }
+    
+    .livro-capa-container {
+        height: 240px;
+    }
+}
+
+@media (max-width: 480px) {
+    .cabecalho {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .menu-superior {
+        width: 100%;
+        justify-content: space-between;
+    }
+    
+    .busca input {
+        width: 100%;
+    }
+    
+    .grade-livros {
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    }
+    
+    .livro-capa-container {
+        height: 200px;
+    }
+    
+    .botao-escrever {
+        padding: 10px 15px;
+        font-size: 0.9rem;
+    }
+}
