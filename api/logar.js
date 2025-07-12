@@ -64,7 +64,5 @@ export default function handler(req, res) {
       });
   }
 
-  else {
-    return res.status(400).json({ message: "Ação inválida" , ok: false});
-  }
+  
 }
