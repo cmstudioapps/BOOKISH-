@@ -22,7 +22,7 @@ export default function handler(req, res) {
             return res.status(400).json({ message: "Senha inválida", login: false });
           }
         } else {
-          return res.status(404).json({ message: "Usuário não existe" });
+          return res.status(404).json({ message: "Usuário não existe" , login: "404"});
         }
       })
       .catch(error => {
