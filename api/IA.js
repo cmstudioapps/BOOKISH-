@@ -87,12 +87,24 @@ ${instrucao ? `\nInstruções: "${instrucao}"` : ""}
   });
 }
 
-// Função pra dividir texto
-function dividirTexto(texto, tamanho = 1000) {
+function dividirTexto(texto, limite = 1000) {
+  const paragrafos = texto.split(/\n+/); // quebra por linha/pulando parágrafos
   const blocos = [];
-  for (let i = 0; i < texto.length; i += tamanho) {
-    blocos.push(texto.slice(i, i + tamanho));
+  let blocoAtual = "";
+
+  for (const p of paragrafos) {
+    if ((blocoAtual + "\n" + p).length > limite) {
+      blocos.push(blocoAtual.trim());
+      blocoAtual = p;
+    } else {
+      blocoAtual += "\n" + p;
+    }
   }
+
+  if (blocoAtual.trim() !== "") {
+    blocos.push(blocoAtual.trim());
+  }
+
   return blocos;
 }
 }
