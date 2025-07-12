@@ -16,7 +16,7 @@ if(acao === "image") {
 
 const pre_prompt = `Observe o texto que eu desenvolvi até agora e gere uma imagem vertical atendendo também as minhas instruções, porem usando o texto como 'contexto'.
     Minhas instruções: ${instrucao}.
-    Meu texto: ${contexto}
+    Meu texto: ${contexto || "sem texto."}
   `
 fetch(`https://api.spiderx.com.br/api/ai/pixart?text=${encodeURIComponent(pre_prompt)}&api_key=${API_KEY}`) 
  .then((response) => response.json()) 
