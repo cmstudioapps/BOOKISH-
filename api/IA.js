@@ -10,6 +10,9 @@ export default function handler(req, res) {
 
   const API_KEY = "inNJuHmF7ffkiZBxdN28";
   const { dados } = req.body;
+if(!dados) {
+return res.status(200).json({message: "falta dados"})
+}
   const { acao, contexto, instrucao } = dados;
 
   if (acao === "image") {
