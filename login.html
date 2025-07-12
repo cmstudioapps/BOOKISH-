@@ -215,117 +215,18 @@
                     <input type="password" id="login-password" required>
                 </div>
 
-                <button class="btn btn-primary" id="login-button">Acessar</button>
+                <button class="btn btn-primary" id="login-button" onclick="acessar()">Acessar</button>
 
-                <div class="auth-toggle">
+                <div style="display:none;" class="auth-toggle">
                     <span>Novo por aqui?</span>
-                    <a href="#" id="show-signup">Crie sua conta</a>
-                </div>
-            </div>
-
-            <!-- Formulário de Cadastro -->
-            <div id="signup-form" class="hidden">
-                <h1 class="auth-title">Crie sua conta</h1>
-                <div id="signup-message" class="message hidden"></div>
-
-                <div class="input-group">
-                    <label for="signup-username">Nome de usuário</label>
-                    <input type="text" id="signup-username" required>
-                </div>
-
-                <div class="input-group">
-                    <label for="signup-password">Senha</label>
-                    <input type="password" id="signup-password" required>
-                </div>
-
-                <div class="input-group">
-                    <label for="signup-key">Chave de acesso</label>
-                    <input type="text" id="signup-key" required>
-                </div>
-
-                <button class="btn btn-primary" id="signup-button">Criar conta</button>
-
-                <div class="auth-toggle">
-                    <span>Já tem uma conta?</span>
-                    <a href="#" id="show-login">Faça login</a>
+                    <a  id="show-signup">Crie sua conta</a>
                 </div>
             </div>
         </div>
+
     </main>
 
 
-
-    <script>
-        // Estado da aplicação
-        const appState = {
-            currentForm: 'login' // 'login' ou 'signup'
-        };
-
-        // Elementos do DOM
-        const loginForm = document.getElementById('login-form');
-        const signupForm = document.getElementById('signup-form');
-        const showSignup = document.getElementById('show-signup');
-        const showLogin = document.getElementById('show-login');
-        const loginMessage = document.getElementById('login-message');
-        const signupMessage = document.getElementById('signup-message');
-
-        // Alternar entre formulários
-        function toggleForms() {
-            if (appState.currentForm === 'login') {
-                loginForm.classList.add('hidden');
-                signupForm.classList.remove('hidden');
-                appState.currentForm = 'signup';
-            } else {
-                signupForm.classList.add('hidden');
-                loginForm.classList.remove('hidden');
-                appState.currentForm = 'login';
-            }
-        }
-
-        // Mostrar mensagem
-        function showMessage(element, message, isError = true) {
-            element.textContent = message;
-            element.classList.remove('hidden');
-            element.classList.remove('success', 'error');
-            element.classList.add(isError ? 'error' : 'success');
-        }
-
-        // Event Listeners
-        showSignup.addEventListener('click', function(e) {
-            e.preventDefault();
-            toggleForms();
-        });
-
-        showLogin.addEventListener('click', function(e) {
-            e.preventDefault();
-            toggleForms();
-        });
-
-        // Simulação de login/cadastro
-        document.getElementById('login-button').addEventListener('click', function() {
-            const username = document.getElementById('login-username').value;
-            const password = document.getElementById('login-password').value;
-            
-            if (!username || !password) {
-                showMessage(loginMessage, 'Preencha todos os campos');
-                return;
-            }
-            
-            showMessage(loginMessage, 'Login bem-sucedido (simulação)', false);
-        });
-
-        document.getElementById('signup-button').addEventListener('click', function() {
-            const username = document.getElementById('signup-username').value;
-            const password = document.getElementById('signup-password').value;
-            const key = document.getElementById('signup-key').value;
-            
-            if (!username || !password || !key) {
-                showMessage(signupMessage, 'Preencha todos os campos');
-                return;
-            }
-            
-            showMessage(signupMessage, 'Conta criada com sucesso (simulação)', false);
-        });
-    </script>
+ <script src="login.js"></script>
 </body>
 </html>
