@@ -1,7 +1,0 @@
-{
-  "name": "bookish",
-  "version": "1.0.0",
-  "scripts": {
-    "build": "echo 'Nada para compilar'"
-  }
-}
