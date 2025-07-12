@@ -2,7 +2,7 @@ export default function handler(req, res) {
 
 
     res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, GET,OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 
   if (req.method === 'OPTIONS') {
@@ -14,6 +14,7 @@ export default function handler(req, res) {
 
 const { dados } = req.body 
 
+if(req.method === "POST") {
 fetch(`${url}/${dados.id}.json`, {
 
 method: "PATCH",
@@ -30,4 +31,20 @@ return res.status(500).json({ok: false, message: "Erro ao encaminhar ao banco."}
 
 
 })
+}
+
+if(req.method === "GET") {
+
+fetch(`${url}.json`).then(response => response.json())
+.then(data => {
+
+ return res.status(200).json(data)
+
+}).catch(error => {
+
+return res.status(500).json({ok: false, message: "Erro ao acessar."})
+
+
+})
+}
 }
