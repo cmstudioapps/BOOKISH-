@@ -44,7 +44,8 @@ function carregarLivros() {
       todosLivros = Array.isArray(data) ? data : Object.values(data);
       
       if (todosLivros.length > 0) {
-        livroEmDestaque = todosLivros[0];
+const sort = Math.floor(Math.random() * todosLivros.length) 
+        livroEmDestaque = todosLivros[sort];
         
         // Salva no sessionStorage para próxima vez
         sessionStorage.setItem('livros', JSON.stringify(todosLivros));
