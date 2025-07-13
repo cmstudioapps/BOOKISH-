@@ -10,10 +10,41 @@ export default function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ erro: "Método não permitido" });
   }
-
+  consta database = ""
   const API_KEY = "inNJuHmF7ffkiZBxdN28";
-  const { acao, contexto, instrucao, pergunta } = req.body;
+  const { acao, contexto, instrucao, pergunta, senha, nome } = req.body;
+let moedas = 0
+fetch(`https://bookish-ofc.vercel.app/api/logar`, {
 
+method: "POST",
+headers: {"Content-Type":"application/json"},
+body: JSON.stringify({
+
+senha, nome , acao: "login"
+})
+
+}).then(response => response.json())
+.then(data => {
+ if(data.login === "false") {
+ return res.status(200).json({message: "Erro: Não encontramos seu login"})
+}
+
+obterMoedas()
+
+}).catch(error => {
+return res.status(500).json({message: "erro ao se comunicar com endpoint"})
+})
+
+function obterMoedas() {
+
+fetch(``, {
+
+if(moedas < 80) {
+
+return res.status(200)
+
+}
+}
 if(acao === "pergunta") {
 
 const pre_prompt = `Pergunta: "${pergunta}".
