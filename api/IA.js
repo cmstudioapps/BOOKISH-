@@ -32,7 +32,11 @@ senha, nome , acao: "login"
 obterMoedas()
 
 }).catch(error => {
-return res.status(500).json({message: "erro ao se comunicar com endpoint"})
+  console.error("Erro na comunicação com endpoint:", error);
+  return res.status(500).json({
+    message: "erro ao se comunicar com endpoint",
+    error: error.message // Mostra o erro específico
+  });
 })
 
 function obterMoedas() {
