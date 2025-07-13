@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Detalhes do Livro</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+      <script src="https://caiolibs.vercel.app/spinner.js"></script>
+    <script src="https://caiolibs.vercel.app/id.js"></script>
+ <script src="https://caiolibs.vercel.app/ch.js"></script>
+  <script src="https://caiolibs.vercel.app/array.js"></script>
+  <style>
+    :root {
+      --primaria: #8a2be2;
+      --primaria-escura: #6a1b9a;
+      --primaria-clara: #9c4dff;
+      --fundo: #121212;
+      --superficie: #1e1e1e;
+      --superficie-clara: #2a2a2a;
+      --texto: #ffffff;
+      --texto-secundario: #a0a0a0;
+      --sombra: 0 4px 6px rgba(0, 0, 0, 0.3);
+      --sombra-destaque: 0 8px 20px rgba(0, 0, 0, 0.5);
+      --borda: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Arial, sans-serif;
+    }
+
+    body {
+      background-color: var(--fundo);
+      color: var(--texto);
+      line-height: 1.6;
+    }
+
+    .cabecalho {
+      background-color: var(--superficie);
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: var(--sombra);
+      border-bottom: var(--borda);
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: var(--primaria);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+    }
+
+    .logo i {
+      margin-right: 10px;
+    }
+
+    .perfil {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: var(--primaria);
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+
+    .perfil:hover {
+      transform: scale(1.1);
+    }
+
+    .perfil i {
+      font-size: 1.2rem;
+      color: white;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 30px 20px;
+    }
+
+    #loading, #error {
+      text-align: center;
+      padding: 40px;
+      font-size: 1.2em;
+      color: var(--texto-secundario);
+    }
+
+    .livro-detalhes-container {
+      display: flex;
+      gap: 40px;
+      background-color: var(--superficie);
+      border-radius: 15px;
+      padding: 30px;
+      margin-top: 20px;
+      box-shadow: var(--sombra-destaque);
+      border: var(--borda);
+      transition: all 0.3s ease;
+    }
+
+    .livro-detalhes-container:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    .livro-capa {
+      flex: 1;
+      max-width: 300px;
+      min-width: 250px;
+    }
+
+    .livro-capa img {
+      width: 100%;
+      border-radius: 10px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+      transition: transform 0.3s ease;
+    }
+
+    .livro-detalhes-container:hover .livro-capa img {
+      transform: scale(1.02);
+    }
+
+    .livro-info {
+      flex: 2;
+    }
+
+    .livro-titulo {
+      font-size: 2.2rem;
+      color: var(--primaria);
+      margin-bottom: 10px;
+      line-height: 1.2;
+    }
+
+    .livro-autor {
+      font-size: 1.3rem;
+      color: var(--texto-secundario);
+      margin-bottom: 20px;
+      font-weight: 400;
+    }
+
+    .livro-meta {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 20px;
+      color: var(--texto-secundario);
+    }
+
+    .livro-data {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .livro-generos {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 25px;
+    }
+
+    .genero-tag {
+      background-color: rgba(138, 43, 226, 0.2);
+      color: var(--primaria);
+      padding: 6px 15px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      border: 1px solid var(--primaria);
+    }
+
+    .livro-sinopse {
+      margin-bottom: 30px;
+    }
+
+    .livro-sinopse h3 {
+      margin-bottom: 15px;
+      color: var(--primaria);
+      font-size: 1.3rem;
+    }
+
+    .livro-sinopse p {
+      line-height: 1.7;
+      font-weight: 300;
+      font-size: 1.05rem;
+    }
+
+    .perguntas-container {
+      margin-top: 40px;
+      background-color: var(--superficie);
+      border-radius: 15px;
+      padding: 30px;
+      box-shadow: var(--sombra);
+    }
+
+    .perguntas-container h2 {
+      color: var(--primaria);
+      margin-bottom: 20px;
+      font-size: 1.5rem;
+    }
+
+    .perguntas-lista {
+      display: grid;
+      gap: 15px;
+    }
+
+    .pergunta-item {
+      background-color: var(--superficie-clara);
+      border-radius: 10px;
+      padding: 15px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border-left: 4px solid var(--primaria);
+    }
+
+    .pergunta-item:hover {
+      background-color: rgba(138, 43, 226, 0.1);
+      transform: translateX(5px);
+    }
+
+    .pergunta-item h3 {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--primaria);
+      margin-bottom: 10px;
+    }
+
+    .pergunta-item .resposta {
+      color: var(--texto-secundario);
+      font-size: 0.95rem;
+      line-height: 1.6;
+      display: none;
+      padding: 10px;
+      background-color: rgba(0,0,0,0.1);
+      border-radius: 5px;
+      margin-top: 10px;
+    }
+
+    .pergunta-item.carregando .resposta {
+      display: block;
+      color: var(--texto-secundario);
+      font-style: italic;
+    }
+
+    .pergunta-item.ativa .resposta {
+      display: block;
+    }
+
+    .botoes-container {
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+      margin-top: 30px;
+    }
+
+    .botao {
+      background-color: var(--primaria);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      font-weight: 500;
+      box-shadow: 0 4px 12px rgba(138, 43, 226, 0.3);
+    }
+
+    .botao:hover {
+      background-color: var(--primaria-clara);
+      transform: translateY(-3px);
+      box-shadow: 0 6px 16px rgba(138, 43, 226, 0.4);
+    }
+
+    .botao i {
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 768px) {
+      .livro-detalhes-container {
+        flex-direction: column;
+      }
+      
+      .livro-capa {
+        max-width: 100%;
+        margin: 0 auto;
+      }
+      
+      .livro-titulo {
+        font-size: 1.8rem;
+      }
+      
+      .livro-autor {
+        font-size: 1.1rem;
+      }
+      
+      .botoes-container {
+        flex-direction: column;
+      }
+      
+      .botao {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 20px 15px;
+      }
+      
+      .livro-detalhes-container {
+        padding: 20px;
+      }
+      
+      .livro-titulo {
+        font-size: 1.6rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="cabecalho">
+    <a href="index.html" class="logo">
+      <i class="fas fa-book"></i>
+      <span>Bookish</span>
+    </a>
+    <div class="perfil">
+      <i class="fas fa-user"></i>
+    </div>
+  </header>
+
+  <div class="container">
+    <div id="loading">
+      <p><i class="fas fa-spinner fa-spin"></i> Carregando livro...</p>
+    </div>
+    
+    <div id="error" style="display: none;">
+      <!-- Mensagens de erro serão exibidas aqui -->
+    </div>
+    
+    <div id="livro-container" style="display: none;">
+      <!-- Conteúdo do livro será inserido aqui pelo JavaScript -->
+    </div>
+  </div>
+
+  <script>
+    // Elementos da página
+    const livroContainer = document.getElementById('livro-container');
+    const loadingEl = document.getElementById('loading');
+    const errorEl = document.getElementById('error');
+    let livroAtual = null;
+
+    // Função para obter ID do livro da URL
+    function obterIdLivro() {
+      const params = new URLSearchParams(window.location.search);
+      return params.get('id');
+    }
+
+    // Carrega os dados do livro
+    async function carregarLivro() {
+      const livroId = obterIdLivro();
+      
+      if (!livroId) {
+        mostrarErro('ID do livro não especificado na URL');
+        return;
+      }
+
+      try {
+        const response = await fetch('https://bookish-ofc.vercel.app/api/postLivro');
+        const data = await response.json();
+        
+        // Transforma em array se necessário
+        const todosLivros = Array.isArray(data) ? data : Object.values(data);
+        livroAtual = todosLivros.find(livro => livro.id === livroId);
+        
+        if (livroAtual) {
+          mostrarLivro();
+        } else {
+          throw new Error('Livro não encontrado');
+        }
+      } catch (error) {
+        console.error('Erro:', error);
+        mostrarErro(`Erro ao carregar livro: ${error.message}`);
+      }
+    }
+
+    // Mostra mensagem de erro
+    function mostrarErro(mensagem) {
+      errorEl.innerHTML = `
+        <p><i class="fas fa-exclamation-triangle"></i> ${mensagem}</p>
+        <div style="margin-top: 20px;">
+          <a href="index.html" class="botao">
+            <i class="fas fa-arrow-left"></i> Voltar para a página inicial
+          </a>
+        </div>
+      `;
+      errorEl.style.display = 'block';
+      loadingEl.style.display = 'none';
+    }
+
+    // Envia pergunta para a API
+    async function enviarPergunta(pergunta, elemento) {
+      if (!livroAtual) return;
+      
+      const item = elemento.closest('.pergunta-item');
+      item.classList.add('carregando');
+      
+      try {
+        const resposta = await fetch('https://bookish-ofc.vercel.app/api/IA', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            acao: 'pergunta',
+              contexto: init(livroAtual.conteudo || '',150),
+              pergunta
+          })
+        });
+        
+        const data = await resposta.json();
+        
+        const respostaEl = item.querySelector('.resposta');
+        respostaEl.textContent = data.resposta || 'Não foi possível obter uma resposta.';
+        item.classList.remove('carregando');
+        item.classList.add('ativa');
+        
+      } catch (error) {
+        console.error('Erro ao enviar pergunta:', error);
+        const respostaEl = item.querySelector('.resposta');
+        respostaEl.textContent = 'Erro ao obter resposta. Tente novamente mais tarde.';
+        item.classList.remove('carregando');
+        item.classList.add('ativa');
+      }
+    }
+
+    // Mostra os detalhes do livro
+    function mostrarLivro() {
+      if (!livroAtual) return;
+      
+      const { capa, titulo, autor, sinopse, generos = [], dataPublicacao, conteudo, id } = livroAtual;
+      
+      livroContainer.innerHTML = `
+        <div class="livro-detalhes-container">
+          <div class="livro-capa">
+            ${capa ? `<img src="${capa}" alt="${titulo || 'Capa do livro'}">` : 
+              `<div style="background: var(--superficie); height: 100%; display: flex; align-items: center; justify-content: center; border-radius: 10px;">
+                <i class="fas fa-book" style="font-size: 3rem; color: var(--primaria);"></i>
+              </div>`}
+          </div>
+          
+          <div class="livro-info">
+            ${titulo ? `<h1 class="livro-titulo">${titulo}</h1>` : ''}
+            ${autor ? `<h2 class="livro-autor">${autor}</h2>` : ''}
+            
+            ${dataPublicacao ? `
+              <div class="livro-meta">
+                <div class="livro-data">
+                  <i class="far fa-calendar-alt"></i>
+                  <span>${new Date(dataPublicacao).toLocaleDateString()}</span>
+                </div>
+              </div>
+            ` : ''}
+            
+            ${generos.length > 0 ? `
+              <div class="livro-generos">
+                ${generos.map(genero => `<span class="genero-tag">${genero}</span>`).join('')}
+              </div>
+            ` : ''}
+            
+            ${sinopse ? `
+              <div class="livro-sinopse">
+                <h3><i class="fas fa-align-left"></i> Sinopse</h3>
+                <p>${sinopse}</p>
+              </div>
+            ` : ''}
+            
+            <div class="botoes-container">
+              ${conteudo ? `
+<a onclick="ler()" class="botao">
+  <i class="fas fa-book-open"></i> Ler agora
+</a>
+              ` : ''}
+              
+              <a href="index.html" class="botao">
+                <i class="fas fa-arrow-left"></i> Voltar
+              </a>
+            </div>
+          </div>
+        </div>
+        
+        <div class="perguntas-container">
+          <h2><i class="fas fa-question-circle"></i> Perguntas sobre este livro</h2>
+          <div class="perguntas-lista">
+            <div class="pergunta-item">
+              <h3 onclick="enviarPergunta('Como o conteúdo deste livro pode me ajudar?', this)">
+                <i class="fas fa-question"></i> Como o conteúdo deste livro pode me ajudar?
+              </h3>
+              <div class="resposta"></div>
+            </div>
+            
+            <div class="pergunta-item">
+              <h3 onclick="enviarPergunta('Por que eu deveria ler esse livro?', this)">
+                <i class="fas fa-question"></i> Por que eu deveria ler esse livro?
+              </h3>
+              <div class="resposta"></div>
+            </div>
+            
+            <div class="pergunta-item">
+              <h3 onclick="enviarPergunta('Que lição posso tirar desse livro?', this)">
+                <i class="fas fa-question"></i> Que lição posso tirar desse livro?
+              </h3>
+              <div class="resposta"></div>
+            </div>
+          </div>
+        </div>
+      `;
+      
+      loadingEl.style.display = 'none';
+      livroContainer.style.display = 'block';
+      const content = {
+        
+        titulo: titulo,
+        conteudo,
+        
+      }
+      sessionStorage.setItem("livroAtual",JSON.stringify(content));
+    }
+  function ler() {
+  
+  
+  window.location.href = "ler.html";
+}
+    // Inicia quando a página carrega
+    window.addEventListener('DOMContentLoaded', carregarLivro);
+  </script>
+</body>
+</html>    
