@@ -442,7 +442,9 @@
           body: JSON.stringify({
             acao: 'pergunta',
               contexto: init(livroAtual.conteudo || '',150),
-              pergunta
+              pergunta,
+            nome: localStorage.getItem("nome"),
+            senha: localStorage.getItem("senha")
           })
         });
         
