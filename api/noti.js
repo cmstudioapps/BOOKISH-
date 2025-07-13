@@ -8,8 +8,8 @@ export default function handler(req, res) {
   }
 
   const API_KEY_IA = "inNJuHmF7ffkiZBxdN28";
-  const ONESIGNAL_APP_ID = "SEU_APP_ID_AQUI";
-  const ONESIGNAL_API_KEY = "SUA_REST_API_KEY_AQUI";
+  const ONESIGNAL_APP_ID = "d2332318-c441-4012-b0d6-277f68f23966";
+  const ONESIGNAL_API_KEY = "os_v2_app_2izsgggeifabfmgwe57wr4rzmzj2zakv4u3urrmhby2tkjvigehfjqtmtdo6izt2lml35mnzqffvl2q325d5kb2obbuv4nfkz5ev4cq";
 
   const promptNotificacao = `
 Manda uma notificação zoeira pro app de livros indies Bookish.
