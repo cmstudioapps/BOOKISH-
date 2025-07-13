@@ -30,7 +30,9 @@ export default function handler(req, res) {
   }
 
   else if (acao === "criar") {
-    const dados = { nome, senha };
+    const valor = 200
+    const dados = { nome, senha, valor};
+
    //Verifica se já existe 
     fetch(`${url}/${nome}.json`)
       .then(response => response.json())
