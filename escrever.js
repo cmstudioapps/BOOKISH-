@@ -28,13 +28,16 @@ function uploadArea() {
     const titulo = document.getElementById("titulo").value.trim()
     const sinopse = document.getElementById("sinopse").value.trim()
     const conteudo = document.getElementById("content")
+    const genero = document.getElementById("genero").value
+    
     const capa = image
     
     const dados = {
       autor,
       titulo,
       sinopse,
-      content,
+      genero: CriarArray(genero,","),
+      conteudo: conteudo.value.trim(),
       capa,
       id: CreateID("xcqwertipsbsja-", 5)
       
