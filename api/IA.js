@@ -12,7 +12,29 @@ export default function handler(req, res) {
   }
 
   const API_KEY = "inNJuHmF7ffkiZBxdN28";
-  const { acao, contexto, instrucao } = req.body;
+  const { acao, contexto, instrucao, pergunta } = req.body;
+
+if(acao === "pergunta") {
+
+const pre_prompt = `Pergunta: "${pergunta}".
+pequena parte do conteúdo do livro: "${contexto}"
+`
+ fetch("https://api.spiderx.com.br/api/ai/gemini?api_key=inNJuHmF7ffkiZBxdN28", {
+ method: "POST",
+ headers: {
+   "Content-Type": "application/json"
+  },
+  body: JSON.stringify({
+   text: pre_prompt.trim()
+  })
+ })
+ .then((response) => response.json())
+ .then((data) => {
+
+return res.status(200).json({resposta: data.response})
+}) 
+
+}
 
   if (acao === "image") {
     
