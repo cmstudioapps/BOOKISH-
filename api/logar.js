@@ -9,8 +9,7 @@ export default function handler(req, res) {
   }
 
   const url = "https://feed-78c44-default-rtdb.firebaseio.com/users";
-  const { dados } = req.body;
-  const { acao, nome, senha } = dados
+  const { acao, nome, senha } = req.body;
   if (acao === "login") {
     fetch(`${url}/${nome}.json`)
       .then(response => response.json())
