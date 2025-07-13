@@ -9,15 +9,17 @@ function acessar() {
   }
   
   const dados = {
-    nome,
-    senha,
-    acao
+    
   };
   
   fetch(`https://bookish-ofc.vercel.app/api/logar`, {
       method: 'POST',
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({dados})
+    body: JSON.stringify({
+    nome,
+    senha,
+    acao
+   })
     })
     .then(response => response.json())
     .then(data => {
