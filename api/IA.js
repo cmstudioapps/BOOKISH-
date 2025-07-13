@@ -10,7 +10,7 @@ export default function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ erro: "Método não permitido" });
   }
-  consta database = ""
+    const database = "https://feed-78c44-default-rtdb.firebaseio.com/users";
   const API_KEY = "inNJuHmF7ffkiZBxdN28";
   const { acao, contexto, instrucao, pergunta, senha, nome } = req.body;
 let moedas = 0
@@ -37,13 +37,30 @@ return res.status(500).json({message: "erro ao se comunicar com endpoint"})
 
 function obterMoedas() {
 
-fetch(``, {
+fetch(`${database}/${nome}/moedas.json`).then(response => response.json ())
+.then(moedas => {
 
-if(moedas < 80) {
+if(Number(moedas) < 80) {
 
-return res.status(200)
+return res.status(400).json({resposta: "Você não tem moedas suficientes pra usar essa função"})
+
+} else {
+
+let novoValor = Number(moedas) - 80
+
+fetch(`${database}/${nome}/moedas.json`, {
+
+method: "PATCH",
+headers: {"Content-Type":"application/json"},
+body: JSON.stringify({moedas: novoValor})
+
+})
 
 }
+
+})
+
+
 }
 if(acao === "pergunta") {
 
