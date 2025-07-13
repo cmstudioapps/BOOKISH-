@@ -61,7 +61,7 @@ function carregarLivros() {
 function mostrarDestaque() {
   if (!livroEmDestaque) return;
   
-  const { capa, titulo, autor, sinopse, generos = [], id } = livroEmDestaque;
+  const { capa, titulo, autor, sinopse, genero = [], id } = livroEmDestaque;
   
   destaqueEl.innerHTML = `
     <img src="${capa}" class="destaque-capa" alt="${titulo}">
@@ -70,7 +70,7 @@ function mostrarDestaque() {
       <p class="destaque-autor">${autor}</p>
       <p class="destaque-descricao">${sinopse}</p>
       <div class="destaque-generos">
-        ${generos.slice(0, 3).map(g => `<span class="genero">${g}</span>`).join('')}
+        ${genero.slice(0, 3).map(g => `<span class="genero">${g}</span>`).join('')}
       </div>
       <a href="livro.html?id=${id}" class="botao">Ver livro</a>
     </div>
@@ -80,11 +80,15 @@ function mostrarDestaque() {
 // Mostra a lista de livros filtrados
 function mostrarLivros() {
   const livrosFiltrados = todosLivros.filter(livro => {
+    // Corrigido: normaliza os gêneros para comparação
+    const generosLivro = livro.genero ? livro.genero.map(g => g.toLowerCase()) : [];
     const categoriaOk = categoriaAtiva === 'todos' ||
-      (livro.generos && livro.generos.some(g => g.toLowerCase().includes(categoriaAtiva)));
+      generosLivro.some(g => g.includes(categoriaAtiva));
+    
     const buscaOk = !textoBusca ||
       (livro.titulo && livro.titulo.toLowerCase().includes(textoBusca)) ||
       (livro.autor && livro.autor.toLowerCase().includes(textoBusca));
+    
     return categoriaOk && buscaOk;
   });
   
