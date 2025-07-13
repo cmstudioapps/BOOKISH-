@@ -74,7 +74,9 @@ function gerarImage() {
     body: JSON.stringify({
       contexto: init(conteudo,50) || "",
       acao: "image",
-      instrucao 
+      instrucao,
+      nome: localStorage.getItem("nome"),
+      senha: localStorage.getItem("senha")
     })
     
   }).then(response => response.json ())
@@ -110,7 +112,9 @@ fetch("https://bookish-ofc.vercel.app/api/IA", {
       body: JSON.stringify({
         contexto: content.value.trim() || "",
         acao: "corrigir",
-        instrucao
+        instrucao,
+        nome: localStorage.getItem("nome"),
+      senha: localStorage.getItem("senha")
       })
 }).then(response => response.json ())
 .then(data => {
