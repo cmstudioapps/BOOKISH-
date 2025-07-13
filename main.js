@@ -1,3 +1,8 @@
+if(!localStorage.getItem("nome")) {
+
+window.location.href = "login.html"
+}
+
 // Variáveis globais
 var todosLivros = [];
 var livroEmDestaque = null;
