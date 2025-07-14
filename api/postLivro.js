@@ -15,8 +15,7 @@ let analise = 0
 
 const { dados } = req.body;
   const API_KEY_IA = "inNJuHmF7ffkiZBxdN28";
- const meu_prompt = `Apenas responda com true ou false, sem explicações, sem texto adicional: Este texto tem palavras muito repetitivas?
-Texto: "${dados.conteudo}"`;
+ const meu_prompt = `Responda apenas com true ou false. Se o texto tiver palavras muito repetitivas, responda true. Caso contrário, responda false. Sem mais palavras, apenas true ou false. Texto: "${dados.conteudo}"`;
 
 fetch("https://api.spiderx.com.br/api/ai/gemini?api_key=" + API_KEY_IA, {
   method: "POST",
