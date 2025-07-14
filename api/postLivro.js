@@ -61,10 +61,9 @@ export default function handler(req, res) {
       let musicUrl = "";
 
       if (geminiData?.text) {
-        const linhas = geminiData.text.split("\n").filter(l => l.trim() !== "");
-        const nomeMusica = linhas[0].replace(/["']/g, "").trim();
+        
 
-        return fetch(`https://api.spiderx.com.br/api/downloads/play-audio?search=${encodeURIComponent(nomeMusica)}&api_key=inNJuHmF7ffkiZBxdN28`)
+        return fetch(`https://api.spiderx.com.br/api/downloads/play-audio?search=${encodeURIComponent(geminiData.text)}&api_key=inNJuHmF7ffkiZBxdN28`)
           .then(res => res.json())
           .then(audioData => {
             if (audioData?.url) {
