@@ -44,7 +44,7 @@ export default function handler(req, res) {
       .catch(() => res.status(200).json({ message: "Erro na análise" }));
   }
   if (req.method === "GET") {
-  const { decodeURIComponent(sinopse) } = req.query
+  const sinopse = decodeURIComponent(req.query.sinopse);
   if (!sinopse) {
     return res.status(400).json({ ok: false, message: "Sinopse não informada.", music: "" });
   }
