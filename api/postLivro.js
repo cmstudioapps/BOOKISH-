@@ -46,7 +46,7 @@ fetch(`${url}/${dados.id}.json`, {
 })  
 .then(response => response.json())  
 .then(data => {  
-  return res.status(200).json({ ok: true, message: "Sucesso!" });  
+  return res.status(200).json({ ok: true, message: "Sucesso!", analise});  
 })  
 .catch(error => {  
   return res.status(500).json({ ok: false, message: "Erro ao encaminhar ao banco." });  
