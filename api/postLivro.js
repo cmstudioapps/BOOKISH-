@@ -44,7 +44,7 @@ export default function handler(req, res) {
       .catch(() => res.status(200).json({ message: "Erro na análise" }));
   }
   if (req.method === "GET") {
-  const sinopse = decodeURIComponent(req.query.sinopse);
+  const sinopse = decodeURIComponent(req.query.sinopse || "");
   if (!sinopse) {
     return res.status(400).json({ ok: false, message: "Sinopse não informada.", music: "" });
   }
@@ -56,34 +56,61 @@ export default function handler(req, res) {
       text: `Com base nesse texto: "${sinopse}", recomende apenas o nome de uma música internacional e sua letra completa, que combine com a história. Não envie imagens, emojis ou comentários. Apenas o nome e a letra.`
     })
   })
-    .then(res => res.json())
+    .then(res => {
+      if (!res.ok) throw new Error(`Erro na API Gemini: ${res.status} ${res.statusText}`);
+      return res.json();
+    })
     .then(geminiData => {
-      let musicUrl = "";
+      console.log("Resposta da Gemini:", geminiData);
 
       if (geminiData?.response) {
-        
+        const nomeMusica = geminiData.response.split("\n")[0].replace(/["']/g, "").trim();
+        if (!nomeMusica) {
+          throw new Error("Nome da música não identificado.");
+        }
+        console.log("Nome da música extraído:", nomeMusica);
 
-        return fetch(`https://api.spiderx.com.br/api/downloads/play-audio?search=${encodeURIComponent(geminiData.response)}&api_key=inNJuHmF7ffkiZBxdN28`)
-          .then(res => res.json())
+        return fetch(`https://api.spiderx.com.br/api/downloads/play-audio?search=${encodeURIComponent(nomeMusica)}&api_key=inNJuHmF7ffkiZBxdN28`)
+          .then(res => {
+            if (!res.ok) throw new Error(`Erro na API de áudio: ${res.status} ${res.statusText}`);
+            return res.json();
+          })
           .then(audioData => {
+            let musicUrl = "";
             if (audioData?.url) {
               musicUrl = audioData.url;
+            } else {
+              console.warn("URL de áudio não encontrada.");
             }
 
             return fetch(`${url}.json`)
-              .then(response => response.json())
+              .then(response => {
+                if (!response.ok) throw new Error(`Erro ao acessar JSON final: ${response.status}`);
+                return response.json();
+              })
               .then(data => res.status(200).json({ ...data, music: musicUrl }))
-              .catch(() => res.status(500).json({ ok: false, message: "Erro ao acessar o JSON final." }));
+              .catch(err => {
+                console.error("Erro ao acessar o JSON final:", err);
+                return res.status(500).json({ ok: false, message: "Erro ao acessar o JSON final." });
+              });
           });
       } else {
-        // Falha na IA, segue normalmente com music vazia
+        // Sem resposta da IA
+        console.warn("Campo 'response' ausente na resposta da Gemini.");
         return fetch(`${url}.json`)
-          .then(response => response.json())
+          .then(response => {
+            if (!response.ok) throw new Error(`Erro ao acessar JSON final: ${response.status}`);
+            return response.json();
+          })
           .then(data => res.status(200).json({ ...data, music: "" }))
-          .catch(() => res.status(500).json({ ok: false, message: "Erro ao acessar o JSON final." }));
+          .catch(err => {
+            console.error("Erro ao acessar o JSON final:", err);
+            return res.status(500).json({ ok: false, message: "Erro ao acessar o JSON final." });
+          });
       }
     })
-    .catch(() => {
+    .catch(err => {
+      console.error("Erro geral ao processar:", err);
       return res.status(500).json({ ok: false, message: "Erro geral ao processar.", music: "" });
     });
 }
