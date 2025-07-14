@@ -8,8 +8,8 @@ export default function handler(req, res) {
   }
 
   const API_KEY_IA = "inNJuHmF7ffkiZBxdN28";
-  const ONESIGNAL_APP_ID = "d2332318-c441-4012-b0d6-277f68f23966";
-  const ONESIGNAL_API_KEY = "os_v2_app_2izsgggeifabfmgwe57wr4rzmzj2zakv4u3urrmhby2tkjvigehfjqtmtdo6izt2lml35mnzqffvl2q325d5kb2obbuv4nfkz5ev4cq";
+  const ONESIGNAL_APP_ID = "f93af6e2-13cf-4acd-abaf-af917b183a60";
+  const ONESIGNAL_API_KEY = "os_v2_app_7e5pnyqtz5fm3k5pv6ixwgb2mabef7dzvdleabntwcakxrvm36lmutwwn44sbuhm2wccy7amuhxmhmkdi7crwguxteya7b34jeqfj5y";
 
   const promptNotificacao = `
 Manda uma notificação zoeira pro app de livros indies Bookish.
