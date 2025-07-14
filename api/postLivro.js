@@ -36,7 +36,7 @@ if (req.method === "POST") {
       analise = data.response.toLowerCase().trim();
 
       if (analise !== "false") {
-        return res.status(200).json({ message: "Texto recusado", analise });
+        return res.status(200).json({ message: "Texto recusado", analise: data.response});
       }
 
       // SE A IA APROVOU, ENTÃO ENVIA PRO FIREBASE
