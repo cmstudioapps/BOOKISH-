@@ -25,9 +25,9 @@ body: JSON.stringify({ text: meu_prompt }),
 .then((r) => r.json())
 .then((data) => {
 
-analise = data
-if (data.response === "true") {
-return res.status(200).json({message: "Texto recusado"})
+analise = data.response.toLowerCase().trim()
+if (analise === "true") {
+return res.status(200).json({message: "Texto recusado", analise})
 } else if (resposta === "false") {
 
 } else {  
