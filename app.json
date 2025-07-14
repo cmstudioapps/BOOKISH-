@@ -9,7 +9,8 @@
     {
       "src": "https://i.imgur.com/tC32d5j.jpeg",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     }
   ]
 }
