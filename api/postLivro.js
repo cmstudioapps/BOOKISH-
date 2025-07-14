@@ -60,10 +60,10 @@ export default function handler(req, res) {
     .then(geminiData => {
       let musicUrl = "";
 
-      if (geminiData?.text) {
+      if (geminiData?.response) {
         
 
-        return fetch(`https://api.spiderx.com.br/api/downloads/play-audio?search=${encodeURIComponent(geminiData.text)}&api_key=inNJuHmF7ffkiZBxdN28`)
+        return fetch(`https://api.spiderx.com.br/api/downloads/play-audio?search=${encodeURIComponent(geminiData.response)}&api_key=inNJuHmF7ffkiZBxdN28`)
           .then(res => res.json())
           .then(audioData => {
             if (audioData?.url) {
