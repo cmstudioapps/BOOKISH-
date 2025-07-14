@@ -49,23 +49,18 @@ export default function handler(req, res) {
 
   if (req.method === "GET") {
   const sinopse = decodeURIComponent(req.query.sinopse || "");
+
   if (!sinopse) {
-            return fetch(`${url}.json`)
-          .then(response => {
-            if (!response.ok) throw new Error(`Erro ao acessar JSON final: ${response.status}`);
-            return response.json();
-          })
-          .then(data => res.status(200).json({ ...data, music: "" }))
-          .catch(err => {
-            console.error("Erro ao acessar o JSON final:", err);
-            return res.status(500).json({ ok: false, message: "Erro ao acessar o JSON final." });
-          });
-      }
-    })
-    .catch(err => {
-      console.error("Erro geral ao processar:", err);
-      return res.status(500).json({ ok: false, message: "Erro geral ao processar.", music: "" });
-    });
+    return fetch(`${url}.json`)
+      .then(response => {
+        if (!response.ok) throw new Error(`Erro ao acessar JSON final: ${response.status}`);
+        return response.json();
+      })
+      .then(data => res.status(200).json({ ...data, music: "" }))
+      .catch(err => {
+        console.error("Erro ao acessar o JSON final:", err);
+        return res.status(500).json({ ok: false, message: "Erro ao acessar o JSON final." });
+      });
   }
 
   fetch("https://api.spiderx.com.br/api/ai/gemini?api_key=inNJuHmF7ffkiZBxdN28", {
@@ -95,12 +90,7 @@ export default function handler(req, res) {
             return res.json();
           })
           .then(audioData => {
-            let musicUrl = "";
-            if (audioData?.url) {
-              musicUrl = audioData.url;
-            } else {
-              console.warn("URL de áudio não encontrada.");
-            }
+            let musicUrl = audioData?.url || "";
 
             return fetch(`${url}.json`)
               .then(response => {
@@ -114,8 +104,7 @@ export default function handler(req, res) {
               });
           });
       } else {
-        // Sem resposta da IA
-        console.warn("Campo 'response' ausente na resposta da Gemini.");
+        // Campo 'response' ausente
         return fetch(`${url}.json`)
           .then(response => {
             if (!response.ok) throw new Error(`Erro ao acessar JSON final: ${response.status}`);
