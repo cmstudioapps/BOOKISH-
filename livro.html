@@ -568,7 +568,7 @@
     autor: livroAtual.autor, // Adicionando o autor também
     conteudo: livroAtual.conteudo
   };
-  sessionStorage.setItem("livroAtual", JSON.stringify(content));
+  localStorage.setItem("livroAtual", JSON.stringify(content));
   window.location.href = "ler.html";
 }
     // Inicia quando a página carrega
