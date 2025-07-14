@@ -57,7 +57,7 @@ return; // 👈 ISSO AQUI É ESSENCIAL
 }
 
 if (req.method === "GET") {
-fetch(${url}.json)
+fetch(`${url}.json`)
 .then(response => response.json())
 .then(data => {
 return res.status(200).json(data);
