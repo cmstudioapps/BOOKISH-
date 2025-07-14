@@ -23,7 +23,8 @@ function uploadArea() {
 //coleta de dados:
 
   function publicar() {
-    
+    const btnPublicar = document.getElementById("")
+SpinJS.start(btnPublicar)
     const autor = localStorage.getItem("nome")
     const titulo = document.getElementById("titulo").value.trim()
     const sinopse = document.getElementById("sinopse").value.trim()
@@ -55,7 +56,10 @@ function uploadArea() {
    .then(data => {
      sessionStorage.clear();
      window.location.href = `livro.html?id=${dados.id}`
-   })
+   }).finally(()=> {
+    SpinJS.stop(btnPublicar)
+
+  })
   }
 
 
