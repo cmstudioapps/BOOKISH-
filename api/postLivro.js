@@ -32,7 +32,7 @@ if (req.method === "POST") {
     body: JSON.stringify({ text: meu_prompt }),
   })
     .then((r) => r.json())
-    .then((data) => {
+    .then((data => {
       analise = data.response?.toLowerCase().trim();
 
       if (analise !== "false") {
