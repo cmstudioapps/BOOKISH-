@@ -268,18 +268,18 @@
       .container-leitura {
         padding: 20px 15px;
       }
-      
+
       .conteudo-livro {
         padding: 25px;
         font-size: 1rem;
         word-spacing: -0.5px;
         letter-spacing: 0.2px;
       }
-      
+
       .titulo-livro {
         font-size: 1.6rem;
       }
-      
+
       .autor-livro {
         font-size: 1rem;
       }
@@ -287,7 +287,7 @@
       .configuracoes {
         width: 280px;
       }
-      
+
       .conteudo-livro p {
         text-indent: 1em;
         margin-bottom: 1.2em;
@@ -302,11 +302,11 @@
         line-height: 1.7;
         word-spacing: -0.8px;
       }
-      
+
       .controles-leitura {
         gap: 10px;
       }
-      
+
       .controle {
         width: 35px;
         height: 35px;
@@ -318,7 +318,7 @@
         bottom: 15px;
         width: calc(100% - 30px);
       }
-      
+
       .conteudo-livro p {
         text-indent: 0.8em;
         margin-bottom: 1em;
@@ -358,7 +358,7 @@
           <button class="btn-fonte" data-size="1.2">A</button>
         </div>
       </div>
-      
+
       <div class="config-opcao">
         <label for="select-tema">Tema:</label>
         <select id="select-tema" class="select-tema">
@@ -379,72 +379,151 @@
   </div>
 
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      const livroData = JSON.parse(sessionStorage.getItem('livroAtual'))
+    // Configurações do leitor
+    const readerConfig = {
+      livroData: null,
+      conteudoEl: null,
+      configPanel: null,
       
-      if (!livroData) {
-        window.location.href = 'index.html';
-        return;
-      }
-      
-      // Preenche os dados do livro
-      document.getElementById('livro-titulo').textContent = livroData.titulo;
-      document.getElementById('livro-autor').textContent = livroData.autor;
-      
-      // Formata o conteúdo (divide em parágrafos)
-      const conteudoFormatado = livroData.conteudo.split('\n')
-        .map(paragrafo => paragrafo.trim() ? `<p>${paragrafo}</p>` : '')
-        .join('');
-      
-      const conteudoEl = document.getElementById('livro-conteudo');
-      conteudoEl.innerHTML = conteudoFormatado;
-      
-      // Configura controles
-      document.getElementById('btn-voltar').addEventListener('click', function() {
-        window.history.back();
-      });
-      
-      const configPanel = document.getElementById('config-panel');
-      document.getElementById('btn-config').addEventListener('click', function() {
-        configPanel.classList.toggle('mostrar');
-      });
-      
-      document.getElementById('fechar-config').addEventListener('click', function() {
-        configPanel.classList.remove('mostrar');
-      });
-      
-      // Controles de tamanho de fonte
-      document.querySelectorAll('.btn-fonte').forEach(btn => {
-        btn.addEventListener('click', function() {
-          const size = this.getAttribute('data-size');
-          document.querySelectorAll('.btn-fonte').forEach(b => b.classList.remove('ativo'));
-          this.classList.add('ativo');
-          conteudoEl.style.fontSize = size + 'rem';
+      init: function() {
+        this.livroData = JSON.parse(sessionStorage.getItem('livroAtual'));
+        this.conteudoEl = document.getElementById('livro-conteudo');
+        this.configPanel = document.getElementById('config-panel');
+
+        if (!this.livroData) {
+          window.location.href = 'index.html';
+          return;
+        }
+
+        this.setupLivro();
+        this.setupControles();
+        this.setupConfiguracoes();
+        this.restaurarPosicaoLeitura();
+        this.setupScrollObserver();
+      },
+
+      setupLivro: function() {
+        // Preenche os dados do livro
+        document.getElementById('livro-titulo').textContent = this.livroData.titulo;
+        document.getElementById('livro-autor').textContent = this.livroData.autor;
+
+        // Formata o conteúdo (divide em parágrafos)
+        const conteudoFormatado = this.livroData.conteudo.split('\n')
+          .map(paragrafo => paragrafo.trim() ? `<p>${paragrafo}</p>` : '')
+          .join('');
+
+        this.conteudoEl.innerHTML = conteudoFormatado;
+      },
+
+      setupControles: function() {
+        document.getElementById('btn-voltar').addEventListener('click', () => {
+          window.history.back();
         });
-      });
-      
-      // Configura o botão de tamanho médio como ativo por padrão
-      document.querySelector('.btn-fonte[data-size="1"]').classList.add('ativo');
-      
-      // Controle de tema
-      document.getElementById('select-tema').addEventListener('change', function() {
-        const tema = this.value;
-        document.body.className = '';
+
+        document.getElementById('btn-config').addEventListener('click', () => {
+          this.configPanel.classList.toggle('mostrar');
+        });
+
+        document.getElementById('fechar-config').addEventListener('click', () => {
+          this.configPanel.classList.remove('mostrar');
+        });
+
+        // Fecha o painel de configurações ao clicar fora
+        document.addEventListener('click', (e) => {
+          if (!this.configPanel.contains(e.target) && 
+              e.target.id !== 'btn-config' && 
+              !e.target.closest('#btn-config')) {
+            this.configPanel.classList.remove('mostrar');
+          }
+        });
+      },
+
+      setupConfiguracoes: function() {
+        // Controles de tamanho de fonte
+        document.querySelectorAll('.btn-fonte').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const size = btn.getAttribute('data-size');
+            document.querySelectorAll('.btn-fonte').forEach(b => b.classList.remove('ativo'));
+            btn.classList.add('ativo');
+            this.conteudoEl.style.fontSize = size + 'rem';
+          });
+        });
+
+        // Configura o botão de tamanho médio como ativo por padrão
+        document.querySelector('.btn-fonte[data-size="1"]').classList.add('ativo');
+
+        // Controle de tema
+        document.getElementById('select-tema').addEventListener('change', (e) => {
+          const tema = e.target.value;
+          document.body.className = '';
+
+          if (tema !== 'escuro') {
+            document.body.classList.add(`tema-${tema}`);
+          }
+        });
+      },
+
+      restaurarPosicaoLeitura: function() {
+        const savedPosition = localStorage.getItem('ultimaPosicaoLeitura');
         
-        if (tema !== 'escuro') {
-          document.body.classList.add(`tema-${tema}`);
+        if (savedPosition) {
+          const { livroId, scrollPosition } = JSON.parse(savedPosition);
+          
+          // Verifica se é o mesmo livro
+          if (livroId === this.livroData.id) {
+            setTimeout(() => {
+              this.scrollToPosition(scrollPosition);
+            }, 300);
+          }
         }
-      });
-      
-      // Fecha o painel de configurações ao clicar fora
-      document.addEventListener('click', function(e) {
-        if (!configPanel.contains(e.target) && 
-            e.target.id !== 'btn-config' && 
-            !e.target.closest('#btn-config')) {
-          configPanel.classList.remove('mostrar');
+      },
+
+      scrollToPosition: function(position) {
+        const startPos = window.pageYOffset;
+        const distance = position - startPos;
+        const duration = 500;
+        let startTime = null;
+
+        function animation(currentTime) {
+          if (startTime === null) startTime = currentTime;
+          const timeElapsed = currentTime - startTime;
+          const run = easeInOutQuad(timeElapsed, startPos, distance, duration);
+          window.scrollTo(0, run);
+          if (timeElapsed < duration) requestAnimationFrame(animation);
         }
-      });
-    });
+
+        function easeInOutQuad(t, b, c, d) {
+          t /= d/2;
+          if (t < 1) return c/2*t*t + b;
+          t--;
+          return -c/2 * (t*(t-2) - 1) + b;
+        }
+
+        requestAnimationFrame(animation);
+      },
+
+      setupScrollObserver: function() {
+        // Salva a posição periodicamente e ao sair da página
+        const savePosition = () => {
+          const scrollPosition = window.pageYOffset;
+          const livroId = this.livroData.id;
+          
+          localStorage.setItem('ultimaPosicaoLeitura', JSON.stringify({
+            livroId,
+            scrollPosition
+          }));
+        };
+
+        // Salva a cada 5 segundos
+        setInterval(savePosition, 5000);
+
+        // Salva quando o usuário sai da página
+        window.addEventListener('beforeunload', savePosition);
+      }
+    };
+
+    // Inicializa o leitor quando o DOM estiver pronto
+    document.addEventListener('DOMContentLoaded', () => readerConfig.init());
   </script>
 </body>
 </html>
