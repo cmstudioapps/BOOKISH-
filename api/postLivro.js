@@ -15,6 +15,18 @@ export default function handler(req, res) {
 
 const { dados } = req.body;
 
+ const meu_prompt = ` Apenas responda com true ou false, sem explicações, sem texto adicional: Este texto tem palavras muito repetitivas?
+Texto: "${dados.content}"` fetch("https://api.spiderx.com.br/api/ai/gemini?api_key=" + API_KEY_IA, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ text: meu_prompt }),
+  })
+    .then((r) => r.json())
+    .then((data) => {
+
+})
+
+
     fetch(`${url}/${dados.id}.json`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
