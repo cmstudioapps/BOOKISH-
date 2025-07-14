@@ -23,7 +23,7 @@ function uploadArea() {
 //coleta de dados:
 
   function publicar() {
-    const btnPublicar = document.getElementById("")
+    const btnPublicar = document.getElementById("publishBtn")
 SpinJS.start(btnPublicar)
     const autor = localStorage.getItem("nome")
     const titulo = document.getElementById("titulo").value.trim()
