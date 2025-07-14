@@ -16,7 +16,7 @@ export default function handler(req, res) {
     
     // Pega os primeiros 150 caracteres do conteúdo
     const textoAvaliar = dados.conteudo.substring(0, 150);
-    const meu_prompt = `Responda apenas com true ou false. Se o texto tiver palavras muito repetitivas (a cada duas palavras repete), em branco, ou caracteres aleatórios, responda true. Caso contrário, responda false. Sem mais palavras, apenas true ou false. Texto: "${textoAvaliar}"`;
+    const meu_prompt = `Responda apenas com "true" ou "false" e nada mais. Nenhum comentário, explicação ou outro texto. True se o texto tiver palavras muito repetidas (a cada 2 ou 3 palavras), estiver vazio ou tiver caracteres aleatórios. Caso contrário, responda false. Texto: "${textoAvaliar}"`;
 
     fetch("https://api.spiderx.com.br/api/ai/gemini?api_key=" + API_KEY_IA, {
       method: "POST",
