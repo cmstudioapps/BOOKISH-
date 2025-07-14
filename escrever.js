@@ -58,8 +58,8 @@ return alert("Erro: preencha todos os campos")
      
    }).then(response => response.json())
    .then(data => {
-     sessionStorage.clear();
-     window.location.href = `livro.html?id=${dados.id}`
+    /* sessionStorage.clear();
+     window.location.href = `livro.html?id=${dados.id}`*/
    }).finally(()=> {
     SpinJS.stop(btnPublicar)
 
