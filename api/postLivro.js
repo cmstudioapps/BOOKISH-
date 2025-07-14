@@ -43,13 +43,50 @@ export default function handler(req, res) {
       })
       .catch(() => res.status(200).json({ message: "Erro na análise" }));
   }
-  else if (req.method === "GET") {
-    fetch(`${url}.json`)
-      .then(response => response.json())
-      .then(data => res.status(200).json(data))
-      .catch(() => res.status(500).json({ ok: false, message: "Erro ao acessar." }));
+  if (req.method === "GET") {
+  const { sinopse } = req.query;
+
+  if (!sinopse) {
+    return res.status(400).json({ ok: false, message: "Sinopse não informada.", music: "" });
   }
-  else {
-    res.status(405).json({ ok: false, message: "Método não permitido." });
-  }
+
+  fetch("https://api.spiderx.com.br/api/ai/gemini?api_key=inNJuHmF7ffkiZBxdN28", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      text: `Com base nesse texto: "${sinopse}", recomende apenas o nome de uma música internacional e sua letra completa, que combine com a história. Não envie imagens, emojis ou comentários. Apenas o nome e a letra.`
+    })
+  })
+    .then(res => res.json())
+    .then(geminiData => {
+      let musicUrl = "";
+
+      if (geminiData?.text) {
+        const linhas = geminiData.text.split("\n").filter(l => l.trim() !== "");
+        const nomeMusica = linhas[0].replace(/["']/g, "").trim();
+
+        return fetch(`https://api.spiderx.com.br/api/downloads/play-audio?search=${encodeURIComponent(nomeMusica)}&api_key=inNJuHmF7ffkiZBxdN28`)
+          .then(res => res.json())
+          .then(audioData => {
+            if (audioData?.url) {
+              musicUrl = audioData.url;
+            }
+
+            return fetch(`${url}.json`)
+              .then(response => response.json())
+              .then(data => res.status(200).json({ ...data, music: musicUrl }))
+              .catch(() => res.status(500).json({ ok: false, message: "Erro ao acessar o JSON final." }));
+          });
+      } else {
+        // Falha na IA, segue normalmente com music vazia
+        return fetch(`${url}.json`)
+          .then(response => response.json())
+          .then(data => res.status(200).json({ ...data, music: "" }))
+          .catch(() => res.status(500).json({ ok: false, message: "Erro ao acessar o JSON final." }));
+      }
+    })
+    .catch(() => {
+      return res.status(500).json({ ok: false, message: "Erro geral ao processar.", music: "" });
+    });
+}
 }
