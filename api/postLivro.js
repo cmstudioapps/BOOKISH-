@@ -14,7 +14,7 @@ export default function handler(req, res) {
   if (req.method === "POST") {
 
 const { dados } = req.body;
-
+  const API_KEY_IA = "inNJuHmF7ffkiZBxdN28";
  const meu_prompt = `Apenas responda com true ou false, sem explicações, sem texto adicional: Este texto tem palavras muito repetitivas?
 Texto: "${dados.conteudo}"`;
 
