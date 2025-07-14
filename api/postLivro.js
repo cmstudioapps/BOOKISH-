@@ -62,7 +62,11 @@ if (req.method === "POST") {
 
 
     })
-    .catch(erro => console.error("Deu ruim:", erro));
+    .catch(erro => {
+    
+   return res.status(500).json({message: erro, analise: "Erro: "+erro})
+
+    });
 
 
   
