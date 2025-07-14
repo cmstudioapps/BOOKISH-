@@ -33,7 +33,7 @@ if (req.method === "POST") {
   })
     .then(r => r.json())
     .then(data => {
-      analise = data.response?.toLowerCase().trim();
+      analise = data.response.toLowerCase().trim();
 
       if (analise !== "false") {
         return res.status(200).json({ message: "Texto recusado", analise });
