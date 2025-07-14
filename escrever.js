@@ -58,9 +58,12 @@ return alert("Erro: preencha todos os campos")
      
    }).then(response => response.json())
    .then(data => {
-alert(data.analise)
-    /* sessionStorage.clear();
-     window.location.href = `livro.html?id=${dados.id}`*/
+if(data.analise !== "false") {
+ return alert("Texto recusado")
+}
+
+    sessionStorage.clear();
+     window.location.href = `livro.html?id=${dados.id}`
    }).finally(()=> {
     SpinJS.stop(btnPublicar)
 
