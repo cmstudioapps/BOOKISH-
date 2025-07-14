@@ -380,150 +380,213 @@
 
   <script>
     // Configurações do leitor
-    const readerConfig = {
-      livroData: null,
-      conteudoEl: null,
-      configPanel: null,
-      
-      init: function() {
-        this.livroData = JSON.parse(sessionStorage.getItem('livroAtual'));
-        this.conteudoEl = document.getElementById('livro-conteudo');
-        this.configPanel = document.getElementById('config-panel');
+const readerConfig = {
+  livroData: null,
+  conteudoEl: null,
+  configPanel: null,
+  ultimoScroll: 0,
 
-        if (!this.livroData) {
-          window.location.href = 'index.html';
-          return;
-        }
+  init: function() {
+    this.livroData = JSON.parse(localStorage.getItem('livroAtual'));
+    this.conteudoEl = document.getElementById('livro-conteudo');
+    this.configPanel = document.getElementById('config-panel');
 
-        this.setupLivro();
-        this.setupControles();
-        this.setupConfiguracoes();
-        this.restaurarPosicaoLeitura();
-        this.setupScrollObserver();
-      },
+    if (!this.livroData) {
+      window.location.href = 'index.html';
+      return;
+    }
 
-      setupLivro: function() {
-        // Preenche os dados do livro
-        document.getElementById('livro-titulo').textContent = this.livroData.titulo;
-        document.getElementById('livro-autor').textContent = this.livroData.autor;
+    this.setupLivro();
+    this.setupControles();
+    this.setupConfiguracoes();
+    this.restaurarPosicaoLeitura();
+    this.setupScrollObserver();
+    this.setupScrollListener();
+  },
 
-        // Formata o conteúdo (divide em parágrafos)
-        const conteudoFormatado = this.livroData.conteudo.split('\n')
-          .map(paragrafo => paragrafo.trim() ? `<p>${paragrafo}</p>` : '')
-          .join('');
+  setupLivro: function() {
+    document.getElementById('livro-titulo').textContent = this.livroData.titulo;
+    document.getElementById('livro-autor').textContent = this.livroData.autor;
 
-        this.conteudoEl.innerHTML = conteudoFormatado;
-      },
+    const conteudoFormatado = this.livroData.conteudo.split('\n')
+      .map(paragrafo => paragrafo.trim() ? `<p>${paragrafo}</p>` : '')
+      .join('');
 
-      setupControles: function() {
-        document.getElementById('btn-voltar').addEventListener('click', () => {
-          window.history.back();
-        });
+    this.conteudoEl.innerHTML = conteudoFormatado;
+  },
 
-        document.getElementById('btn-config').addEventListener('click', () => {
-          this.configPanel.classList.toggle('mostrar');
-        });
+  setupControles: function() {
+    document.getElementById('btn-voltar').addEventListener('click', () => {
+      this.salvarPosicaoAtual();
+      window.history.back();
+    });
 
-        document.getElementById('fechar-config').addEventListener('click', () => {
-          this.configPanel.classList.remove('mostrar');
-        });
+    document.getElementById('btn-config').addEventListener('click', () => {
+      this.configPanel.classList.toggle('mostrar');
+    });
 
-        // Fecha o painel de configurações ao clicar fora
-        document.addEventListener('click', (e) => {
-          if (!this.configPanel.contains(e.target) && 
-              e.target.id !== 'btn-config' && 
-              !e.target.closest('#btn-config')) {
-            this.configPanel.classList.remove('mostrar');
-          }
-        });
-      },
+    document.getElementById('fechar-config').addEventListener('click', () => {
+      this.configPanel.classList.remove('mostrar');
+    });
 
-      setupConfiguracoes: function() {
-        // Controles de tamanho de fonte
-        document.querySelectorAll('.btn-fonte').forEach(btn => {
-          btn.addEventListener('click', () => {
-            const size = btn.getAttribute('data-size');
-            document.querySelectorAll('.btn-fonte').forEach(b => b.classList.remove('ativo'));
-            btn.classList.add('ativo');
-            this.conteudoEl.style.fontSize = size + 'rem';
-          });
-        });
-
-        // Configura o botão de tamanho médio como ativo por padrão
-        document.querySelector('.btn-fonte[data-size="1"]').classList.add('ativo');
-
-        // Controle de tema
-        document.getElementById('select-tema').addEventListener('change', (e) => {
-          const tema = e.target.value;
-          document.body.className = '';
-
-          if (tema !== 'escuro') {
-            document.body.classList.add(`tema-${tema}`);
-          }
-        });
-      },
-
-      restaurarPosicaoLeitura: function() {
-        const savedPosition = localStorage.getItem('ultimaPosicaoLeitura');
-        
-        if (savedPosition) {
-          const { livroId, scrollPosition } = JSON.parse(savedPosition);
-          
-          // Verifica se é o mesmo livro
-          if (livroId === this.livroData.id) {
-            setTimeout(() => {
-              this.scrollToPosition(scrollPosition);
-            }, 300);
-          }
-        }
-      },
-
-      scrollToPosition: function(position) {
-        const startPos = window.pageYOffset;
-        const distance = position - startPos;
-        const duration = 500;
-        let startTime = null;
-
-        function animation(currentTime) {
-          if (startTime === null) startTime = currentTime;
-          const timeElapsed = currentTime - startTime;
-          const run = easeInOutQuad(timeElapsed, startPos, distance, duration);
-          window.scrollTo(0, run);
-          if (timeElapsed < duration) requestAnimationFrame(animation);
-        }
-
-        function easeInOutQuad(t, b, c, d) {
-          t /= d/2;
-          if (t < 1) return c/2*t*t + b;
-          t--;
-          return -c/2 * (t*(t-2) - 1) + b;
-        }
-
-        requestAnimationFrame(animation);
-      },
-
-      setupScrollObserver: function() {
-        // Salva a posição periodicamente e ao sair da página
-        const savePosition = () => {
-          const scrollPosition = window.pageYOffset;
-          const livroId = this.livroData.id;
-          
-          localStorage.setItem('ultimaPosicaoLeitura', JSON.stringify({
-            livroId,
-            scrollPosition
-          }));
-        };
-
-        // Salva a cada 5 segundos
-        setInterval(savePosition, 5000);
-
-        // Salva quando o usuário sai da página
-        window.addEventListener('beforeunload', savePosition);
+    document.addEventListener('click', (e) => {
+      if (!this.configPanel.contains(e.target) && 
+          e.target.id !== 'btn-config' && 
+          !e.target.closest('#btn-config')) {
+        this.configPanel.classList.remove('mostrar');
       }
+    });
+  },
+
+  setupConfiguracoes: function() {
+    document.querySelectorAll('.btn-fonte').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const size = btn.getAttribute('data-size');
+        document.querySelectorAll('.btn-fonte').forEach(b => b.classList.remove('ativo'));
+        btn.classList.add('ativo');
+        this.conteudoEl.style.fontSize = size + 'rem';
+        this.salvarConfiguracoes();
+      });
+    });
+
+    document.querySelector('.btn-fonte[data-size="1"]').classList.add('ativo');
+
+    document.getElementById('select-tema').addEventListener('change', (e) => {
+      const tema = e.target.value;
+      document.body.className = '';
+      if (tema !== 'escuro') {
+        document.body.classList.add(`tema-${tema}`);
+      }
+      this.salvarConfiguracoes();
+    });
+
+    this.carregarConfiguracoes();
+  },
+
+  salvarConfiguracoes: function() {
+    const config = {
+      tamanhoFonte: this.conteudoEl.style.fontSize || '1rem',
+      tema: document.body.className || 'escuro'
+    };
+    localStorage.setItem('configLeitura', JSON.stringify(config));
+  },
+
+  carregarConfiguracoes: function() {
+    const config = JSON.parse(localStorage.getItem('configLeitura'));
+    if (config) {
+      if (config.tamanhoFonte) {
+        this.conteudoEl.style.fontSize = config.tamanhoFonte;
+        document.querySelector(`.btn-fonte[data-size="${parseFloat(config.tamanhoFonte)}"]`)?.classList.add('ativo');
+      }
+      if (config.tema && config.tema !== 'escuro') {
+        document.body.classList.add(config.tema);
+        document.getElementById('select-tema').value = config.tema;
+      }
+    }
+  },
+
+  restaurarPosicaoLeitura: function() {
+    const todasPosicoes = JSON.parse(localStorage.getItem('todasPosicoesLeitura')) || {};
+    if (todasPosicoes[this.livroData.id]) {
+      setTimeout(() => {
+        this.scrollToPosition(todasPosicoes[this.livroData.id].scrollPosition);
+      }, 300);
+    }
+  },
+
+  scrollToPosition: function(position) {
+    if (position <= 0) return;
+    
+    const startPos = window.pageYOffset;
+    const distance = position - startPos;
+    if (distance === 0) return;
+    
+    const duration = 500;
+    let startTime = null;
+
+    const animation = (currentTime) => {
+      if (startTime === null) startTime = currentTime;
+      const timeElapsed = currentTime - startTime;
+      const run = this.easeInOutQuad(timeElapsed, startPos, distance, duration);
+      window.scrollTo(0, run);
+      if (timeElapsed < duration) requestAnimationFrame(animation);
     };
 
-    // Inicializa o leitor quando o DOM estiver pronto
-    document.addEventListener('DOMContentLoaded', () => readerConfig.init());
+    requestAnimationFrame(animation);
+  },
+
+  easeInOutQuad: function(t, b, c, d) {
+    t /= d/2;
+    if (t < 1) return c/2*t*t + b;
+    t--;
+    return -c/2 * (t*(t-2) - 1) + b;
+  },
+
+  setupScrollObserver: function() {
+    setInterval(() => this.salvarPosicaoAtual(), 5000);
+    window.addEventListener('beforeunload', () => this.salvarPosicaoAtual());
+  },
+
+  setupScrollListener: function() {
+    let isScrolling;
+    window.addEventListener('scroll', () => {
+      clearTimeout(isScrolling);
+      isScrolling = setTimeout(() => {
+        this.salvarPosicaoAtual();
+      }, 100);
+    });
+  },
+
+  salvarPosicaoAtual: function() {
+    const scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
+    // Evitar salvar várias vezes a mesma posição
+    if (Math.abs(scrollPosition - this.ultimoScroll) < 50) return;
+    
+    this.ultimoScroll = scrollPosition;
+    const livroId = this.livroData.id;
+
+    const todasPosicoes = JSON.parse(localStorage.getItem('todasPosicoesLeitura')) || {};
+    todasPosicoes[livroId] = {
+      scrollPosition,
+      timestamp: new Date().getTime(),
+      progresso: this.calcularProgresso()
+    };
+
+    localStorage.setItem('todasPosicoesLeitura', JSON.stringify(todasPosicoes));
+  },
+
+  calcularProgresso: function() {
+    const alturaTotal = document.documentElement.scrollHeight - window.innerHeight;
+    const scrollAtual = window.scrollY;
+    return Math.min(100, Math.round((scrollAtual / alturaTotal) * 100));
+  }
+};
+
+// Inicializa o leitor quando o DOM estiver pronto
+document.addEventListener('DOMContentLoaded', () => {
+  readerConfig.init();
+  
+  // Limpeza opcional de posições antigas (mais de 30 dias)
+  const limparPosicoesAntigas = () => {
+    const todasPosicoes = JSON.parse(localStorage.getItem('todasPosicoesLeitura')) || {};
+    const trintaDiasAtras = new Date().getTime() - (30 * 24 * 60 * 60 * 1000);
+    
+    for (const livroId in todasPosicoes) {
+      if (todasPosicoes[livroId].timestamp < trintaDiasAtras) {
+        delete todasPosicoes[livroId];
+      }
+    }
+    
+    localStorage.setItem('todasPosicoesLeitura', JSON.stringify(todasPosicoes));
+  };
+  
+  // Executar a limpeza uma vez por dia
+  const ultimaLimpeza = localStorage.getItem('ultimaLimpezaPosicoes');
+  if (!ultimaLimpeza || (new Date().getTime() - ultimaLimpeza) > (24 * 60 * 60 * 1000)) {
+    limparPosicoesAntigas();
+    localStorage.setItem('ultimaLimpezaPosicoes', new Date().getTime());
+  }
+});
   </script>
 </body>
 </html>
