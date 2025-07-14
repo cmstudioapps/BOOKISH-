@@ -12,50 +12,43 @@ const url = "https://feed-78c44-default-rtdb.firebaseio.com/livros";
 
 let analise = 0
 if (req.method === "POST") {
+  const { dados } = req.body;
+  const API_KEY_IA = "inNJuHmF7ffkiZBxdN28";
+  const meu_prompt = `Responda apenas com true ou false. Se o texto tiver palavras muito repetitivas, responda true. Caso contrário, responda false. Sem mais palavras, apenas true ou false. Texto: "${dados.conteudo}"`;
 
-const { dados } = req.body;
-const API_KEY_IA = "inNJuHmF7ffkiZBxdN28";
-const meu_prompt = `Responda apenas com true ou false. Se o texto tiver palavras muito repetitivas, responda true. Caso contrário, responda false. Sem mais palavras, apenas true ou false. Texto: "${dados.conteudo}"`;
+  fetch("https://api.spiderx.com.br/api/ai/gemini?api_key=" + API_KEY_IA, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ text: meu_prompt }),
+  })
+    .then((r) => r.json())
+    .then((data) => {
+      let analise = data.response?.toLowerCase().trim();
 
-fetch("https://api.spiderx.com.br/api/ai/gemini?api_key=" + API_KEY_IA, {
-method: "POST",
-headers: { "Content-Type": "application/json" },
-body: JSON.stringify({ text: meu_prompt }),
-})
-.then((r) => r.json())
-.then((data) => {
+      if (analise !== "false") {
+        return res.status(200).json({ message: "Texto recusado", analise });
+      }
 
-analise = data.response.toLowerCase().trim()
-if (analise === "true") {
-return res.status(200).json({message: "Texto recusado", analise})
-} else if (resposta === "false") {
+      // SE A IA APROVOU, ENTÃO ENVIA PRO FIREBASE
+      fetch(`${url}/${dados.id}.json`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(dados),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          return res.status(200).json({ ok: true, message: "Sucesso!", analise });
+        })
+        .catch((error) => {
+          return res.status(500).json({ ok: false, message: "Erro ao encaminhar ao banco." });
+        });
+    })
+    .catch((err) => {
+      return res.status(200).json({ message: "Erro na análise" });
+    });
 
-} else {  
-
+  return;
 }
-
-})
-.catch((err) => {
-return res.status(200).json({message: "Erro na análise"})
-});
-
-fetch(`${url}/${dados.id}.json`, {  
-  method: "PATCH",  
-  headers: { "Content-Type": "application/json" },  
-  body: JSON.stringify(dados)  
-})  
-.then(response => response.json())  
-.then(data => {  
-  return res.status(200).json({ ok: true, message: "Sucesso!", analise});  
-})  
-.catch(error => {  
-  return res.status(500).json({ ok: false, message: "Erro ao encaminhar ao banco." });  
-});  
-
-return; // 👈 ISSO AQUI É ESSENCIAL
-
-}
-
 if (req.method === "GET") {
 fetch(`${url}.json`)
 .then(response => response.json())
