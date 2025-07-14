@@ -53,8 +53,8 @@ function uploadArea() {
      
    }).then(response => response.json())
    .then(data => {
-     
-     window.location.href = "index.html"
+     sessionStorage.clear();
+     window.location.href = `livro.html?id=${dados.id}`
    })
   }
 
