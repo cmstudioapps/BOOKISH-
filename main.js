@@ -39,7 +39,7 @@ function carregarLivros() {
   // Só faz requisição se não tiver dados salvos
   fetch('https://bookish-ofc.vercel.app/api/postLivro')
     .then(res => res.json())
-    .then(function(data.data) {
+    .then(function(data) {
       // Converte para array se necessário
       todosLivros = Array.isArray(data) ? data : Object.values(data);
       
