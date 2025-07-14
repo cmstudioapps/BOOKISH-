@@ -32,7 +32,7 @@ SpinJS.start(btnPublicar, "red")
     const genero = document.getElementById("genero").value
     
     const capa = image
-if (!autor && !titulo && !sinopse && !conteudo.value.trim() && !genero && !capa) {
+if (!autor || !titulo || !sinopse || !conteudo.value.trim() || !genero || !capa) {
 return alert("Erro: preencha todos os campos")
 }
     
