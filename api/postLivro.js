@@ -15,16 +15,29 @@ export default function handler(req, res) {
 
 const { dados } = req.body;
 
- const meu_prompt = ` Apenas responda com true ou false, sem explicações, sem texto adicional: Este texto tem palavras muito repetitivas?
-Texto: "${dados.content}"` fetch("https://api.spiderx.com.br/api/ai/gemini?api_key=" + API_KEY_IA, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ text: meu_prompt }),
-  })
-    .then((r) => r.json())
-    .then((data) => {
+ const meu_prompt = `Apenas responda com true ou false, sem explicações, sem texto adicional: Este texto tem palavras muito repetitivas?
+Texto: "${dados.conteudo}"`;
 
+fetch("https://api.spiderx.com.br/api/ai/gemini?api_key=" + API_KEY_IA, {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ text: meu_prompt }),
 })
+  .then((r) => r.json())
+  .then((data) => {
+    const resposta = String(data.resposta || data.result || data.output || "").toLowerCase().trim();
+
+    if (resposta === "true") {
+      return res.status(200).json({message: "Texto recusado"})
+    } else if (resposta === "false") {
+  
+    } else {
+   
+    }
+  })
+  .catch((err) => {
+    return res.status(200).json({message: "Erro na análise"})
+  });
 
 
     fetch(`${url}/${dados.id}.json`, {
