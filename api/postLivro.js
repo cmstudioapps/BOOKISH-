@@ -31,8 +31,8 @@ if (req.method === "POST") {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ text: meu_prompt }),
   })
-    .then((r) => r.json())
-    .then((data => {
+    .then(r => r.json())
+    .then(data => {
       analise = data.response?.toLowerCase().trim();
 
       if (analise !== "false") {
