@@ -43,10 +43,29 @@ export default function handler(req, res) {
       })
       .catch(() => res.status(200).json({ message: "Erro na análise" }));
   }
+
+
+
+
   if (req.method === "GET") {
   const sinopse = decodeURIComponent(req.query.sinopse || "");
   if (!sinopse) {
-    return res.status(400).json({ ok: false, message: "Sinopse não informada.", music: "" });
+            return fetch(`${url}.json`)
+          .then(response => {
+            if (!response.ok) throw new Error(`Erro ao acessar JSON final: ${response.status}`);
+            return response.json();
+          })
+          .then(data => res.status(200).json({ ...data, music: "" }))
+          .catch(err => {
+            console.error("Erro ao acessar o JSON final:", err);
+            return res.status(500).json({ ok: false, message: "Erro ao acessar o JSON final." });
+          });
+      }
+    })
+    .catch(err => {
+      console.error("Erro geral ao processar:", err);
+      return res.status(500).json({ ok: false, message: "Erro geral ao processar.", music: "" });
+    });
   }
 
   fetch("https://api.spiderx.com.br/api/ai/gemini?api_key=inNJuHmF7ffkiZBxdN28", {
