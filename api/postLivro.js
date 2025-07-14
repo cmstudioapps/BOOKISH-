@@ -10,7 +10,7 @@ export default function handler(req, res) {
 
   const url = "https://feed-78c44-default-rtdb.firebaseio.com/livros";
   
-
+let analise = 0
   if (req.method === "POST") {
 
 const { dados } = req.body;
@@ -26,7 +26,7 @@ fetch("https://api.spiderx.com.br/api/ai/gemini?api_key=" + API_KEY_IA, {
   .then((r) => r.json())
   .then((data) => {
     const resposta = String(data.resposta || data.result || data.output || "").toLowerCase().trim();
-
+  analise = resposta 
     if (resposta === "true") {
       return res.status(200).json({message: "Texto recusado"})
     } else if (resposta === "false") {
