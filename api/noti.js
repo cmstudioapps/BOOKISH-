@@ -13,6 +13,7 @@ export default function handler(req, res) {
 
   const promptNotificacao = `
 Manda uma notificação zoeira pro app de livros indies Bookish.
+cuidado pra não mencionar outros apps que não seja o "Bookish". 
 Sem explicação, sem enrolação, só a mensagem pronta, como se tivesse vindo direto do sistema.
 Estilo sarcástico, engraçado e criativo. Pode usar emoji, mas sem parecer notinha de rodapé de escola.
 E nem vem com “aqui está” ou qualquer introdução.`.trim();
