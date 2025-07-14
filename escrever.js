@@ -33,6 +33,7 @@ SpinJS.start(btnPublicar, "red")
     
     const capa = image
 if (!autor || !titulo || !sinopse || !conteudo.value.trim() || !genero || !capa) {
+  SpinJS.stop(btnPublicar)
 return alert("Erro: preencha todos os campos")
 }
     
