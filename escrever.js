@@ -24,7 +24,7 @@ function uploadArea() {
 
   function publicar() {
     const btnPublicar = document.getElementById("publishBtn")
-SpinJS.start(btnPublicar)
+SpinJS.start(btnPublicar, "red")
     const autor = localStorage.getItem("nome")
     const titulo = document.getElementById("titulo").value.trim()
     const sinopse = document.getElementById("sinopse").value.trim()
