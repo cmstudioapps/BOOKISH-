@@ -1,17 +1,19 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+
 <!-- 100% privacy-first analytics -->
 <script data-collect-dnt="true" async src="https://scripts.simpleanalyticscdn.com/latest.js"></script>
 <noscript><img src="https://queue.simpleanalyticscdn.com/noscript.gif?collect-dnt=true" alt="" referrerpolicy="no-referrer-when-downgrade"/></noscript>
-
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BOOKISH - Descubra novos livros</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="index.css" type="text/css" media="all" />
-<link rel="manifest" href="app.json">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <header class="cabecalho">
@@ -21,6 +23,7 @@
         </a>
         <div class="menu-superior">
             <div class="busca">
+                <i class="fas fa-search"></i>
                 <input type="text" id="busca" placeholder="Buscar livros...">
             </div>
 
@@ -35,26 +38,33 @@
             <!-- Conteúdo será preenchido por JavaScript -->
         </section>
 
-        <div class="filtros">
-            <button class="filtro ativo" data-genero="todos">Todos</button>
-            <button class="filtro" data-genero="ficcao">Ficção</button>
-            <button class="filtro" data-genero="fantasia">Fantasia</button>
-            <button class="filtro" data-genero="romance">Romance</button>
-            <button class="filtro" data-genero="drama">Drama</button>
-            <button class="filtro" data-genero="aventura">Aventura</button>
-        </div>
-
-        <div class="grade-livros" id="livros">
-            <div class="carregando">
-                <p>Carregando livros...</p>
+        <div class="filtros-container">
+            <h2 class="titulo-secao">Explorar por gênero</h2>
+            <div class="filtros">
+                <button class="filtro ativo" data-genero="todos">Todos</button>
+                <button class="filtro" data-genero="ficcao">Ficção científica</button>
+                <button class="filtro" data-genero="fantasia">Fantasia</button>
+                <button class="filtro" data-genero="romance">Romance</button>
+                <button class="filtro" data-genero="drama">Drama</button>
+                <button class="filtro" data-genero="aventura">Aventura</button>
+                                <button class="filtro" data-genero="terror">Terror</button>
             </div>
         </div>
-            <a href="escrever.html" class="botao-escrever">
-              <i class="fas fa-pen"></i> criar
-            </a>
+
+        <div class="secao-livros">
+            <h2 class="titulo-secao">Livros recomendados</h2>
+            <div class="grade-livros" id="livros">
+                <div class="carregando">
+                    <p>Carregando livros...</p>
+                </div>
+            </div>
+        </div>
+        
+        <a href="escrever.html" class="botao-escrever">
+            <i class="fas fa-pen"></i> criar
+        </a>
     </main>
 
-<script src="main.js"></script>
-    
+    <script src="main.js"></script>
 </body>
 </html>
