@@ -41,7 +41,7 @@ function carregarLivros() {
     .then(res => res.json())
     .then(function(data) {
       // Converte para array se necessário
-      todosLivros = Array.isArray(data) ? data : Object.values(data);
+      todosLivros = Array.isArray(data) ? data : Object.values(data).filter(livro => typeof livro === 'object' && livro.titulo);
       
       if (todosLivros.length > 0) {
 const sort = Math.floor(Math.random() * todosLivros.length) 
