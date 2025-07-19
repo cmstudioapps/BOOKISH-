@@ -17,7 +17,7 @@ export default function handler (req, res) {
 
 const { nome } = req.query 
 
-fetch(`${database}/moedas.json`).then(response => response.json())
+fetch(`${database}/${nome}/moedas.json`).then(response => response.json())
 .then(data => {
 
  return res.status(200).send(data)
