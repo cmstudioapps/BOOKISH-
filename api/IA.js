@@ -26,81 +26,94 @@ export default function handler(req, res) {
       return res.status(200).json({message: "Erro: Não encontramos seu login"});
     }
 
-    // Agora verificamos as moedas antes de continuar
     fetch(`${database}/${nome}/moedas.json`)
-      .then(response => response.json())
-      .then(moedas => {
-        if(Number(moedas) < 80) {
-          return res.status(400).json({resposta: "Você não tem moedas suficientes pra usar essa função"});
-        }
-
-        // Atualiza as moedas primeiro
-        let novoValor = Number(moedas) - 80;
-        fetch(`${database}/${nome}/moedas.json`, {
-          method: "PATCH",
-          headers: {"Content-Type":"application/json"},
-          body: JSON.stringify(novoValor)
-        })
-        .then(() => {
-          // Só depois de atualizar as moedas, processa a ação
-          processarAcao();
-        })
-        .catch(error => {
-          console.error("Erro ao atualizar moedas:", error);
-          return res.status(500).json({erro: "Falha ao atualizar moedas"});
-        });
-      })
-      .catch(error => {
-        console.error("Erro ao obter moedas:", error);
-        return res.status(500).json({erro: "Falha ao verificar moedas"});
-      });
-
-    function processarAcao() {
-      if(acao === "pergunta") {
-        const pre_prompt = `Pergunta: "${pergunta}".
-        pequena parte do conteúdo do livro: "${contexto}"
-        `;
-        fetch("https://api.spiderx.com.br/api/ai/gemini?api_key=inNJuHmF7ffkiZBxdN28", {
-          method: "POST",
-          headers: {"Content-Type": "application/json"},
-          body: JSON.stringify({ text: pre_prompt.trim() })
-        })
-        .then(response => response.json())
-        .then(data => {
-          return res.status(200).json({resposta: data.response});
-        })
-        .catch(error => {
-          console.error("Erro na API Gemini:", error);
-          return res.status(500).json({erro: "Falha ao processar pergunta"});
-        });
+    .then(response => response.json())
+    .then(moedas => {
+      if(Number(moedas) < 80) {
+        return res.status(400).json({resposta: "Você não tem moedas suficientes"});
       }
-      else if(acao === "image") {
-        const pre_prompt = `Observe o texto que eu desenvolvi até agora e gere uma imagem vertical atendendo também as minhas instruções, porém usando o texto como 'contexto'.
-        Minhas instruções: ${instrucao}.
-        Meu texto: ${contexto || "sem texto!"}`;
 
-        fetch(`https://api.spiderx.com.br/api/ai/pixart?text=${encodeURIComponent(pre_prompt)}&api_key=${API_KEY}`)
+      // Atualiza as moedas primeiro
+      fetch(`${database}/${nome}/moedas.json`, {
+        method: "PATCH",
+        headers: {"Content-Type":"application/json"},
+        body: JSON.stringify(Number(moedas) - 80)
+      })
+      .then(() => {
+        // Agora processa a ação solicitada
+        if(acao === "pergunta") {
+          const pre_prompt = `Pergunta: "${pergunta}".\npequena parte do conteúdo do livro: "${contexto}"`;
+          
+          fetch("https://api.spiderx.com.br/api/ai/gemini?api_key=inNJuHmF7ffkiZBxdN28", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({ text: pre_prompt.trim() })
+          })
           .then(response => response.json())
           .then(data => {
-            if (!data || !data.image) {
-              return res.status(500).json({ erro: "Resposta inesperada da API" });
-            }
-            res.status(200).json({ img: data.image });
-          })
-          .catch(error => {
-            res.status(500).json({ erro: "Erro ao gerar imagem", detalhes: error.message });
+            return res.status(200).json({resposta: data.response});
           });
-      }
-      else if(acao === "corrigir") {
-        // ... (seu código existente para correção)
-      }
-    }
+        }
+
+        else if(acao === "image") {
+          const pre_prompt = `Observe o texto que eu desenvolvi até agora e gere uma imagem vertical atendendo também as minhas instruções, porém usando o texto como 'contexto'.\nMinhas instruções: ${instrucao}.\nMeu texto: ${contexto || "sem texto!"}`;
+
+          fetch(`https://api.spiderx.com.br/api/ai/pixart?text=${encodeURIComponent(pre_prompt)}&api_key=${API_KEY}`)
+          .then(response => response.json())
+          .then(data => {
+            res.status(200).json({ img: data.image });
+          });
+        }
+
+        else if(acao === "corrigir") {
+          if (!contexto) return res.status(400).json({ erro: "Texto vazio" });
+
+          const blocos = dividirTexto(contexto, 1000);
+          const resultados = [];
+
+          (async () => {
+            for (const bloco of blocos) {
+              const pre_prompt = `Corrija os erros gramaticais e ortográficos do texto a seguir.\nNão adicione explicações, nem mensagens extras.\nRetorne apenas o texto corrigido completo.\n\nTexto: "${bloco}"${instrucao ? `\nInstruções: "${instrucao}"` : ""}`;
+              
+              const resposta = await fetch(`https://api.spiderx.com.br/api/ai/gemini?api_key=${API_KEY}`, {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({ text: pre_prompt })
+              });
+
+              const data = await resposta.json();
+              resultados.push(data.response || "");
+            }
+
+            res.status(200).json({ resposta: resultados.join(" ").trim() });
+          })();
+        }
+      });
+    });
   })
   .catch(error => {
-    console.error("Erro na comunicação com endpoint:", error);
-    return res.status(500).json({
-      message: "erro ao se comunicar com endpoint",
-      error: error.message
-    });
+    console.error("Erro:", error);
+    return res.status(500).json({ erro: error.message });
   });
+
+  function dividirTexto(texto, limite = 1000) {
+    const paragrafos = texto.split(/\n+/);
+    const blocos = [];
+    let blocoAtual = "";
+
+    for (const p of paragrafos) {
+      if ((blocoAtual + "\n" + p).length > limite) {
+        blocos.push(blocoAtual.trim());
+        blocoAtual = p;
+      } else {
+        blocoAtual += "\n" + p;
+      }
+    }
+
+    if (blocoAtual.trim() !== "") {
+      blocos.push(blocoAtual.trim());
+    }
+
+    return blocos;
+  }
 }
