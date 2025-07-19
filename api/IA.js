@@ -35,7 +35,7 @@ export default function handler(req, res) {
 
       // DESCONTA PRIMEIRO
       fetch(`${database}/${nome}/moedas.json`, {
-        method: "PATCH",
+        method: "PUT",
         headers: {"Content-Type":"application/json"},
         body: JSON.stringify(Number(moedas) - 80)
       })
