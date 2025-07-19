@@ -74,6 +74,11 @@ if(data.analise !== "false") {
 //operações com "IA"
 
 function gerarImage() {
+
+if(!confirm("Tem certeza? você vai gastar 80 Moedas para realizar esta ação.")){
+return 
+}
+
   const botao = document.getElementById("gerarImage")
   const conteudo = document.getElementById("content").value.trim()
   const instrucao = document.getElementById("instrucao").value.trim() || "Gera uma imagem de um cavalo"
@@ -109,7 +114,10 @@ function gerarImage() {
 }
 
 function corrigir() {
-  
+  if(!confirm("Tem certeza? você vai gastar 80 Moedas para realizar esta ação.")){
+return 
+}
+
 let content = document.getElementById("content")
 navigator.clipboard.writeText(content.value)
 let btnCorrigir = document.getElementById("correctBtn")
