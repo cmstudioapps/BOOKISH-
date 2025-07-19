@@ -34,7 +34,7 @@ fetch(`https://bookish-ofc.vercel.app/api/moedas?nome=${localStorage.getItem("no
  MostrarSaldo.innerHTML += moedas || "0"
 
  MostrarSaldo.style.color = "yellow"
-MostrarSaldo.style.texDecoration = "none"
+MostrarSaldo.style.textDecoration = "none"
 })
 
 // Busca os livros da API ou do sessionStorage
