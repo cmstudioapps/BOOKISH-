@@ -33,7 +33,7 @@ if(!pacote || !nome || !senha || !codigo) {
  
   if (resposta === "true") {
    saldoMoedas += Number(pacote)
-     fetch(`${usuarios}/${nome}/${moedas}.json`, {
+     fetch(`${usuarios}/${nome}/moedas.json`, {
        method: "PUT",
        headers: {"Content-type":"application/json"},
        body: JSON.stringify(saldoMoedas)
