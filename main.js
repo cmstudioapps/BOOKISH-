@@ -9,18 +9,32 @@ var livroEmDestaque = null;
 var categoriaAtiva = 'todos';
 var textoBusca = '';
 
+
+
+
 // Elementos da página
 var destaqueEl = document.getElementById('destaque');
 var livrosEl = document.getElementById('livros');
 var buscaEl = document.getElementById('busca');
 var filtrosEl = document.querySelectorAll('.filtro');
 var perfilEl = document.getElementById('perfil');
-
+var MostrarSaldo = document.getElementById("Moedas")
 // Carrega a foto do perfil do localStorage
 function carregarFotoPerfil() {
   var foto = localStorage.getItem('imagePerfil');
   perfilEl.innerHTML = foto ? `<img src="${foto}" alt="Foto perfil">` : '<i class="fas fa-user"></i>';
 }
+
+
+//Busca o saldo do usuário:
+
+fetch(`https://bookish-ofc.vercel.app/api/moedas`).then(response => response.text())
+.then(moedas => {
+
+ MostrarSaldo.innerHTML += moedas || "0"
+
+
+})
 
 // Busca os livros da API ou do sessionStorage
 function carregarLivros() {
