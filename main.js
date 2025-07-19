@@ -28,7 +28,7 @@ function carregarFotoPerfil() {
 
 //Busca o saldo do usuário:
 
-fetch(`https://bookish-ofc.vercel.app/api/moedas`).then(response => response.text())
+fetch(`https://bookish-ofc.vercel.app/api/moedas?nome=${localStorage.getItem("nome")}`).then(response => response.text())
 .then(moedas => {
 
  MostrarSaldo.innerHTML += moedas || "0"
