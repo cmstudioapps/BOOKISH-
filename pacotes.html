@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comprar Moedas - Bookish</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primaria: #8a2be2;
+            --primaria-escura: #6a1b9a;
+            --primaria-clara: #9c4dff;
+            --fundo: #121212;
+            --superficie: #1e1e1e;
+            --superficie-clara: #2a2a2a;
+            --texto: #ffffff;
+            --texto-secundario: #a0a0a0;
+            --sombra: 0 4px 6px rgba(0, 0, 0, 0.3);
+            --sombra-destaque: 0 8px 20px rgba(0, 0, 0, 0.5);
+            --borda: 1px solid rgba(255, 255, 255, 0.1);
+            --borda-clara: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', 'Segoe UI', Arial, sans-serif;
+            user-select: none;
+        }
+
+        body {
+            background-color: var(--fundo);
+            color: var(--texto);
+            line-height: 1.6;
+        }
+
+        .cabecalho {
+            background-color: var(--superficie);
+            padding: 15px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: var(--sombra);
+            border-bottom: var(--borda-clara);
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primaria);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            letter-spacing: 0.5px;
+        }
+
+        .logo i {
+            margin-right: 12px;
+            font-size: 1.4rem;
+        }
+
+        .conteudo-principal {
+            padding: 30px 5%;
+            max-width: 1200px;
+            margin: 0 auto;
+            min-height: calc(100vh - 80px);
+        }
+
+        .titulo-secao {
+            font-size: 1.8rem;
+            margin-bottom: 30px;
+            color: var(--texto);
+            font-weight: 600;
+            position: relative;
+            padding-bottom: 10px;
+            text-align: center;
+        }
+
+        .titulo-secao::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background-color: var(--primaria);
+            border-radius: 3px;
+        }
+
+        .grade-moedas {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .pacote-moedas {
+            background: linear-gradient(135deg, var(--superficie), var(--superficie-clara));
+            border-radius: 15px;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            box-shadow: var(--sombra);
+            border: var(--borda);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pacote-moedas:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--sombra-destaque);
+            border-color: var(--primaria-clara);
+        }
+
+        .pacote-moedas::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primaria), var(--primaria-clara));
+        }
+
+        .icone-moedas {
+            font-size: 3rem;
+            color: var(--primaria);
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .pacote-moedas:hover .icone-moedas {
+            transform: scale(1.1) rotate(15deg);
+            color: var(--primaria-clara);
+        }
+
+        .quantidade-moedas {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: var(--primaria);
+            transition: all 0.3s ease;
+        }
+
+        .pacote-moedas:hover .quantidade-moedas {
+            color: var(--texto);
+        }
+
+        .preco-moedas {
+            font-size: 1.5rem;
+            margin-bottom: 25px;
+            color: var(--texto);
+            font-weight: 600;
+        }
+
+        .botao-comprar {
+            background-color: var(--primaria);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            box-shadow: 0 4px 12px rgba(138, 43, 226, 0.3);
+            width: 100%;
+            max-width: 200px;
+        }
+
+        .botao-comprar:hover {
+            background-color: var(--primaria-clara);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 16px rgba(138, 43, 226, 0.4);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-conteudo {
+            background-color: var(--superficie);
+            padding: 30px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: var(--sombra-destaque);
+            border: var(--borda);
+            position: relative;
+            animation: modalFadeIn 0.3s ease;
+        }
+
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fechar-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 1.5rem;
+            color: var(--texto-secundario);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .fechar-modal:hover {
+            color: var(--texto);
+            transform: rotate(90deg);
+        }
+
+        .modal-titulo {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: var(--primaria);
+            text-align: center;
+        }
+
+        .input-codigo {
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 20px;
+            background-color: var(--fundo);
+            border: var(--borda);
+            border-radius: 8px;
+            color: var(--texto);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .input-codigo:focus {
+            outline: none;
+            border-color: var(--primaria);
+            box-shadow: 0 0 0 2px rgba(138, 43, 226, 0.3);
+        }
+
+        .botao-confirmar {
+            background-color: var(--primaria);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            box-shadow: 0 4px 12px rgba(138, 43, 226, 0.3);
+            width: 100%;
+        }
+
+        .botao-confirmar:hover {
+            background-color: var(--primaria-clara);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 16px rgba(138, 43, 226, 0.4);
+        }
+
+        .rodape {
+            background-color: var(--superficie);
+            padding: 20px 5%;
+            text-align: center;
+            color: var(--texto-secundario);
+            font-size: 0.9rem;
+            border-top: var(--borda-clara);
+        }
+
+        @media (max-width: 768px) {
+            .grade-moedas {
+                grid-template-columns: 1fr;
+            }
+            
+            .pacote-moedas {
+                padding: 25px;
+            }
+            
+            .quantidade-moedas {
+                font-size: 2rem;
+            }
+            
+            .preco-moedas {
+                font-size: 1.3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="cabecalho">
+        <a href="#" class="logo">
+            <i class="fas fa-book-open"></i>
+            Bookish
+        </a>
+    </header>
+
+    <main class="conteudo-principal">
+        <h1 class="titulo-secao">Comprar Moedas</h1>
+        
+        <div class="grade-moedas">
+            <div class="pacote-moedas">
+                <i class="fas fa-coins icone-moedas"></i>
+                <h2 class="quantidade-moedas">1.500</h2>
+                <p class="preco-moedas">R$ 3,00</p>
+                <button class="botao-comprar" onclick="abrirModal('1500')">Comprar</button>
+            </div>
+            
+            <div class="pacote-moedas">
+                <i class="fas fa-coins icone-moedas"></i>
+                <h2 class="quantidade-moedas">2.500</h2>
+                <p class="preco-moedas">R$ 5,00</p>
+                <button class="botao-comprar" onclick="abrirModal('2500')">Comprar</button>
+            </div>
+            
+            <div class="pacote-moedas">
+                <i class="fas fa-coins icone-moedas"></i>
+                <h2 class="quantidade-moedas">5.400</h2>
+                <p class="preco-moedas">R$ 9,00</p>
+                <button class="botao-comprar" onclick="abrirModal('5400')">Comprar</button>
+            </div>
+        </div>
+    </main>
+
+    <div id="modal-codigo" class="modal">
+        <div class="modal-conteudo">
+            <span class="fechar-modal" onclick="fecharModal()">&times;</span>
+            <h3 class="modal-titulo">Insira o Código</h3>
+            <input type="text" id="codigo-input" class="input-codigo" placeholder="Digite o código de desbloqueio">
+            <button class="botao-confirmar" onclick="validarCodigo()">Confirmar</button>
+        </div>
+    </div>
+
+    <footer class="rodape">
+   
+    </footer>
+
+    <script>
+        let pacoteAtual = '';
+        
+        function abrirModal(pacote) {
+            pacoteAtual = pacote;
+            document.getElementById('modal-codigo').style.display = 'flex';
+            document.getElementById('codigo-input').value = '';
+            document.getElementById('codigo-input').focus();
+        }
+        
+        function fecharModal() {
+            document.getElementById('modal-codigo').style.display = 'none';
+        }
+        
+    function validarCodigo() {
+    const codigo = document.getElementById('codigo-input').value.trim();
+    
+    if (!codigo) {
+        alert('Por favor, insira um código válido.');
+        return;
+    }
+    
+    fetch('https://bookish-ofc.vercel.app/api/pacotes', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            codigo: codigo,
+            pacote: pacoteAtual,
+            senha: localStorage.getItem("senha"),
+            nome: localStorage.getItem("nome")
+        })
+    }).then(response => response.json())
+    .then(data => {
+       
+        if (data.ok == false) {
+            alert("ERRO: "+data.message)
+        } else {
+
+          alert("Sucesso! "+data.message)  
+        }
+
+    })
+    .catch(error => {
+        console.error('Erro:', error);
+        alert('Erro ao validar o código. Tente novamente mais tarde.');
+    });
+}
+        
+        // Fechar modal ao clicar fora
+        window.onclick = function(event) {
+            const modal = document.getElementById('modal-codigo');
+            if (event.target === modal) {
+                fecharModal();
+            }
+        };
+        
+        // Fechar modal com ESC
+        document.onkeydown = function(event) {
+            if (event.key === 'Escape') {
+                fecharModal();
+            }
+        };
+    </script>
+</body>
+</html>
