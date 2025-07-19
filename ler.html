@@ -380,6 +380,20 @@
   </div>
 
   <script>
+
+
+  let elemento = document.documentElement; // Pega o <html>
+
+  if (elemento.requestFullscreen) {
+    elemento.requestFullscreen();
+  } else if (elemento.webkitRequestFullscreen) { // Safari
+    elemento.webkitRequestFullscreen();
+  } else if (elemento.msRequestFullscreen) { // IE
+    elemento.msRequestFullscreen();
+  }
+
+
+    
     // Configurações do leitor
 const readerConfig = {
   livroData: null,
