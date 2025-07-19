@@ -33,14 +33,14 @@ export default function handler(req, res) {
         return res.status(400).json({resposta: "Você não tem moedas suficientes"});
       }
 
-      // Atualiza as moedas primeiro
+      // DESCONTA PRIMEIRO
       fetch(`${database}/${nome}/moedas.json`, {
         method: "PATCH",
         headers: {"Content-Type":"application/json"},
         body: JSON.stringify(Number(moedas) - 80)
       })
       .then(() => {
-        // Agora processa a ação solicitada
+        // DEPOIS EXECUTA A AÇÃO
         if(acao === "pergunta") {
           const pre_prompt = `Pergunta: "${pergunta}".\npequena parte do conteúdo do livro: "${contexto}"`;
           
@@ -51,10 +51,9 @@ export default function handler(req, res) {
           })
           .then(response => response.json())
           .then(data => {
-            return res.status(200).json({resposta: data.response});
+            res.status(200).json({resposta: data.response});
           });
         }
-
         else if(acao === "image") {
           const pre_prompt = `Observe o texto que eu desenvolvi até agora e gere uma imagem vertical atendendo também as minhas instruções, porém usando o texto como 'contexto'.\nMinhas instruções: ${instrucao}.\nMeu texto: ${contexto || "sem texto!"}`;
 
@@ -64,7 +63,6 @@ export default function handler(req, res) {
             res.status(200).json({ img: data.image });
           });
         }
-
         else if(acao === "corrigir") {
           if (!contexto) return res.status(400).json({ erro: "Texto vazio" });
 
@@ -80,7 +78,6 @@ export default function handler(req, res) {
                 headers: {"Content-Type": "application/json"},
                 body: JSON.stringify({ text: pre_prompt })
               });
-
               const data = await resposta.json();
               resultados.push(data.response || "");
             }
@@ -88,12 +85,16 @@ export default function handler(req, res) {
             res.status(200).json({ resposta: resultados.join(" ").trim() });
           })();
         }
+      })
+      .catch(error => {
+        console.error("Erro ao atualizar moedas:", error);
+        res.status(500).json({ erro: "Falha ao atualizar moedas" });
       });
     });
   })
   .catch(error => {
     console.error("Erro:", error);
-    return res.status(500).json({ erro: error.message });
+    res.status(500).json({ erro: error.message });
   });
 
   function dividirTexto(texto, limite = 1000) {
