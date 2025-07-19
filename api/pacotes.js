@@ -32,7 +32,7 @@ export default function handler(req, res) {
         return res.status(400).json({ok: false, message: "senha nao corresponde"});
       }
 
-      fetch(`https://caiolibs.vercel.app/api/keyChecked.js?id=lojei&chave=${codigo}`)
+      fetch(`https://caiolibs.vercel.app/api/keyChecked.js?id=Lojei&chave=${codigo}`)
         .then(response => response.text())
         .then(resposta => {
           if (resposta === "true") {
