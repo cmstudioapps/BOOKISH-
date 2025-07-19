@@ -37,7 +37,7 @@ export default function handler(req, res) {
       fetch(`${database}/${nome}/moedas.json`, {
         method: "PATCH",
         headers: {"Content-Type":"application/json"},
-        body: JSON.stringify(Number(moedas) - 80)
+        body: JSON.stringify({Number(moedas) - 80})
       })
       .then(() => {
         // DEPOIS EXECUTA A AÇÃO
