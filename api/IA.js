@@ -56,7 +56,7 @@ fetch(`${database}/${nome}/moedas.json`, {
 
 method: "PATCH",
 headers: {"Content-Type":"application/json"},
-body: JSON.stringify({moedas: novoValor})
+body: JSON.stringify(novoValor)
 
 })
 
