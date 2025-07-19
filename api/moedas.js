@@ -13,6 +13,16 @@ export default function handler (req, res) {
   }
 
 
- 
+   const database = "https://feed-78c44-default-rtdb.firebaseio.com/users";
+
+const { nome } = req.query 
+
+fetch(`${database}/moedas.json`).then(response => response.json())
+.then(data => {
+
+ return res.status(200).send(data)
+
+
+})
 
 }
