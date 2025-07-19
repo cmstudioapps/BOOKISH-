@@ -28,7 +28,7 @@ if(!pacote || !nome || !senha || !codigo) {
    return res.status(400).json({ok: false, message: "senha nao corresponde"})
    }
 
-   fetch(`https://caiolibs.vercel.app/api/keyChecked.js?id=lojei&chave=${codigo}`).then(respons => respons.txt())
+   fetch(`https://caiolibs.vercel.app/api/keyChecked.js?id=lojei&chave=${codigo}`).then(respons => respons.text())
   .then(resposta => {
  
   if (resposta === "true") {
