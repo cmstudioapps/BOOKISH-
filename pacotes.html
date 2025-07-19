@@ -342,6 +342,9 @@
             <h3 class="modal-titulo">Insira o Código</h3>
             <input type="text" id="codigo-input" class="input-codigo" placeholder="Digite o código de desbloqueio">
             <button class="botao-confirmar" onclick="validarCodigo()">Confirmar</button>
+            <p style="margin-top: 15px; text-align: center; color: var(--texto-secundario);">
+                Não possui um código? <a href="#" onclick="redirecionarWhatsApp()" style="color: var(--primaria); text-decoration: none;">Clique aqui</a> para adquirir.
+            </p>
         </div>
     </div>
 
@@ -363,41 +366,46 @@
             document.getElementById('modal-codigo').style.display = 'none';
         }
         
-    function validarCodigo() {
-    const codigo = document.getElementById('codigo-input').value.trim();
-    
-    if (!codigo) {
-        alert('Por favor, insira um código válido.');
-        return;
-    }
-    
-    fetch('https://bookish-ofc.vercel.app/api/pacotes', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            codigo: codigo,
-            pacote: pacoteAtual,
-            senha: localStorage.getItem("senha"),
-            nome: localStorage.getItem("nome")
-        })
-    }).then(response => response.json())
-    .then(data => {
-       
-        if (data.ok == false) {
-            alert("ERRO: "+data.message)
-        } else {
-
-          alert("Sucesso! "+data.message)  
+        function redirecionarWhatsApp() {
+            const mensagem = encodeURIComponent(`Olá, gostaria de adquirir um código para comprar moedas no Bookish. Pacote desejado: ${pacoteAtual} moedas.`);
+            window.location.href = `https://wa.me/5587991883720?text=${mensagem}`;
+            fecharModal();
         }
+        
+        function validarCodigo() {
+            const codigo = document.getElementById('codigo-input').value.trim();
+            
+            if (!codigo) {
+                alert('Por favor, insira um código válido.');
+                return;
+            }
+            
+            fetch('https://bookish-ofc.vercel.app/api/pacotes', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    codigo: codigo,
+                    pacote: pacoteAtual,
+                    senha: localStorage.getItem("senha"),
+                    nome: localStorage.getItem("nome")
+                })
+            }).then(response => response.json())
+            .then(data => {
+               
+                if (data.ok == false) {
+                    alert("ERRO: "+data.message)
+                } else {
+                    alert("Sucesso! "+data.message)  
+                }
 
-    })
-    .catch(error => {
-        console.error('Erro:', error);
-        alert('Erro ao validar o código. Tente novamente mais tarde.');
-    });
-}
+            })
+            .catch(error => {
+                console.error('Erro:', error);
+                alert('Erro ao validar o código. Tente novamente mais tarde.');
+            });
+        }
         
         // Fechar modal ao clicar fora
         window.onclick = function(event) {
