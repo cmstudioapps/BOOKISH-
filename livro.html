@@ -556,7 +556,7 @@
           </div>
         </div>
       `;
-      
+      initDisqus(livroAtual.id)
       loadingEl.style.display = 'none';
       livroContainer.style.display = 'block';
       const content = {
@@ -578,8 +578,29 @@
   localStorage.setItem("livroAtual", JSON.stringify(content));
   window.location.href = "ler.html";
 }
+
+// Inicializa o Disqus com ID específico para cada livro
+function initDisqus(livroId) {
+  window.disqus_config = function () {
+    this.page.url = `${window.location.origin}/detalhes.html?id=${livroId}`;
+    this.page.identifier = `livro-${livroId}`;
+    this.page.title = livroAtual?.titulo || 'Discussão sobre o livro';
+  };
+
+  // Carrega o script do Disqus
+  (function() {
+    const d = document, s = d.createElement('script');
+    s.src = 'https://SEUDOMINIO.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+  })();
+}
+    
     // Inicia quando a página carrega
     window.addEventListener('DOMContentLoaded', carregarLivro);
+
+
+    
   </script>
 </body>
 </html>    
