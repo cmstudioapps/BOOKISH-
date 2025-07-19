@@ -439,6 +439,11 @@
 
     // Envia pergunta para a API
     async function enviarPergunta(pergunta, elemento) {
+    
+   if(!confirm("Tem certeza? você vai gastar 80 Moedas para realizar esta ação.")){
+return 
+}
+
       if (!livroAtual) return;
       
       const item = elemento.closest('.pergunta-item');
