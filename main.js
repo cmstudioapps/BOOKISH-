@@ -69,7 +69,7 @@ const sort = Math.floor(Math.random() * todosLivros.length)
         mostrarDestaque();
         mostrarLivros();
       } else {
-        livrosEl.innerHTML = '<div class="carregando"><p>Nenhum livro encontrado</p></div>';
+        livrosEl.innerContent = '<div class="carregando"><p>Nenhum livro encontrado</p></div>';
       }
     })
     .catch(function(error) {
@@ -84,7 +84,7 @@ function mostrarDestaque() {
   
   const { capa, titulo, autor, sinopse, genero = [], id } = livroEmDestaque;
   
-  destaqueEl.innerHTML = `
+  destaqueEl.innerContent = `
     <img src="${capa}" class="destaque-capa" alt="${titulo}">
     <div class="destaque-info">
       <h1 class="destaque-titulo">${titulo}</h1>
@@ -114,11 +114,11 @@ function mostrarLivros() {
   });
   
   if (livrosFiltrados.length === 0) {
-    livrosEl.innerHTML = '<div class="carregando"><p>Nenhum livro encontrado</p></div>';
+    livrosEl.innerContent= '<div class="carregando"><p>Nenhum livro encontrado</p></div>';
     return;
   }
   
-  livrosEl.innerHTML = livrosFiltrados.map(livro => `
+  livrosEl.innerContent = livrosFiltrados.map(livro => `
     <div class="livro" onclick="window.location='livro.html?id=${livro.id}'">
       <div class="livro-capa-container">
         <img src="${livro.capa}" class="livro-capa" alt="${livro.titulo}">
