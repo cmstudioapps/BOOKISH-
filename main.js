@@ -34,7 +34,7 @@ function carregarFotoPerfil() {
 fetch(`https://bookish-ofc.vercel.app/api/moedas?nome=${localStorage.getItem("nome")}`)
   .then(response => response.text())
   .then(moedas => {
-    MostrarSaldo.textContent += moedas || "0";
+    MostrarSaldo.innerHTML += moedas || "0";
     MostrarSaldo.style.color = "yellow";
     MostrarSaldo.style.textDecoration = "none";
   });
