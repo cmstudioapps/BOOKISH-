@@ -16,17 +16,21 @@ var filtrosEl = document.querySelectorAll('.filtro');
 var perfilEl = document.getElementById('perfil');
 var MostrarSaldo = document.getElementById("Moedas");
 
-// Carrega a foto do perfil do localStorage (SANITIZADA)
+// Carrega a foto do perfil do localStorage (com validação)
 function carregarFotoPerfil() {
   var foto = localStorage.getItem('imagePerfil');
   if (foto && /^https?:\/\/.+\.(jpg|jpeg|png|gif|webp)$/i.test(foto)) {
-    perfilEl.innerHTML = DOMPurify.sanitize(`<img src="${foto}" alt="Foto perfil">`);
+    const img = document.createElement("img");
+    img.src = foto;
+    img.alt = "Foto perfil";
+    perfilEl.innerHTML = "";
+    perfilEl.appendChild(img);
   } else {
     perfilEl.innerHTML = '<i class="fas fa-user"></i>';
   }
 }
 
-// Busca o saldo do usuário (usa textContent ao invés de innerHTML)
+// Busca o saldo do usuário (sem innerHTML)
 fetch(`https://bookish-ofc.vercel.app/api/moedas?nome=${localStorage.getItem("nome")}`)
   .then(response => response.text())
   .then(moedas => {
@@ -63,36 +67,61 @@ function carregarLivros() {
         mostrarDestaque();
         mostrarLivros();
       } else {
-        livrosEl.innerHTML = DOMPurify.sanitize('<div class="carregando"><p>Nenhum livro encontrado</p></div>');
+        livrosEl.textContent = "Nenhum livro encontrado";
       }
     })
     .catch(function (error) {
       console.error('Erro ao carregar livros:', error);
-      livrosEl.innerHTML = DOMPurify.sanitize('<div class="carregando"><p>Erro ao carregar livros</p></div>');
+      livrosEl.textContent = "Erro ao carregar livros";
     });
 }
 
-// Mostra o livro em destaque (SANITIZADO)
+// Mostra o livro em destaque (sem innerHTML perigoso)
 function mostrarDestaque() {
   if (!livroEmDestaque) return;
 
   const { capa, titulo, autor, sinopse, genero = [], id } = livroEmDestaque;
 
-  destaqueEl.innerHTML = DOMPurify.sanitize(`
-    <img src="${capa}" class="destaque-capa" alt="${titulo}">
-    <div class="destaque-info">
-      <h1 class="destaque-titulo">${titulo}</h1>
-      <p class="destaque-autor">${autor}</p>
-      <p class="destaque-descricao">${sinopse}</p>
-      <div class="destaque-generos">
-        ${genero.slice(0, 3).map(g => `<span class="genero">${g}</span>`).join('')}
-      </div>
-      <a href="livro.html?id=${id}" class="botao">Ver livro</a>
-    </div>
-  `);
+  destaqueEl.innerHTML = ""; // limpa
+  const img = document.createElement("img");
+  img.src = capa;
+  img.className = "destaque-capa";
+  img.alt = titulo;
+
+  const infoDiv = document.createElement("div");
+  infoDiv.className = "destaque-info";
+
+  const h1 = document.createElement("h1");
+  h1.className = "destaque-titulo";
+  h1.textContent = titulo;
+
+  const pAutor = document.createElement("p");
+  pAutor.className = "destaque-autor";
+  pAutor.textContent = autor;
+
+  const pDesc = document.createElement("p");
+  pDesc.className = "destaque-descricao";
+  pDesc.textContent = sinopse;
+
+  const genContainer = document.createElement("div");
+  genContainer.className = "destaque-generos";
+  genero.slice(0, 3).forEach(g => {
+    const span = document.createElement("span");
+    span.className = "genero";
+    span.textContent = g;
+    genContainer.appendChild(span);
+  });
+
+  const link = document.createElement("a");
+  link.href = `livro.html?id=${id}`;
+  link.className = "botao";
+  link.textContent = "Ver livro";
+
+  infoDiv.append(h1, pAutor, pDesc, genContainer, link);
+  destaqueEl.append(img, infoDiv);
 }
 
-// Mostra a lista de livros filtrados (SANITIZADO)
+// Mostra a lista de livros (sem innerHTML malicioso)
 function mostrarLivros() {
   const livrosFiltrados = todosLivros.filter(livro => {
     const generosLivro = livro.genero ? livro.genero.map(g => g.toLowerCase()) : [];
@@ -104,27 +133,45 @@ function mostrarLivros() {
     return categoriaOk && buscaOk;
   });
 
+  livrosEl.innerHTML = ""; // limpa
+
   if (livrosFiltrados.length === 0) {
-    livrosEl.innerHTML = DOMPurify.sanitize('<div class="carregando"><p>Nenhum livro encontrado</p></div>');
+    livrosEl.textContent = "Nenhum livro encontrado";
     return;
   }
 
-  livrosEl.innerHTML = DOMPurify.sanitize(
-    livrosFiltrados.map(livro => `
-      <div class="livro" onclick="window.location='livro.html?id=${livro.id}'">
-        <div class="livro-capa-container">
-          <img src="${livro.capa}" class="livro-capa" alt="${livro.titulo}">
-        </div>
-        <div class="livro-info">
-          <h3 class="livro-titulo">${livro.titulo}</h3>
-          <p class="livro-autor">${livro.autor}</p>
-        </div>
-      </div>
-    `).join('')
-  );
+  livrosFiltrados.forEach(livro => {
+    const livroDiv = document.createElement("div");
+    livroDiv.className = "livro";
+    livroDiv.onclick = () => window.location = `livro.html?id=${livro.id}`;
+
+    const capaContainer = document.createElement("div");
+    capaContainer.className = "livro-capa-container";
+
+    const img = document.createElement("img");
+    img.src = livro.capa;
+    img.className = "livro-capa";
+    img.alt = livro.titulo;
+
+    const info = document.createElement("div");
+    info.className = "livro-info";
+
+    const h3 = document.createElement("h3");
+    h3.className = "livro-titulo";
+    h3.textContent = livro.titulo;
+
+    const p = document.createElement("p");
+    p.className = "livro-autor";
+    p.textContent = livro.autor;
+
+    capaContainer.appendChild(img);
+    info.append(h3, p);
+    livroDiv.append(capaContainer, info);
+    livrosEl.appendChild(livroDiv);
+  });
 }
 
-// Configura os filtros
+// Filtros
 filtrosEl.forEach(filtro => {
   filtro.addEventListener('click', function () {
     filtrosEl.forEach(f => f.classList.remove('ativo'));
@@ -134,13 +181,13 @@ filtrosEl.forEach(filtro => {
   });
 });
 
-// Configura a busca
+// Busca
 buscaEl.addEventListener('input', function () {
   textoBusca = this.value.trim().toLowerCase();
   mostrarLivros();
 });
 
-// Inicia a página
+// Início
 window.addEventListener('DOMContentLoaded', function () {
   carregarFotoPerfil();
   carregarLivros();
