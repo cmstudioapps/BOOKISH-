@@ -69,12 +69,12 @@ const sort = Math.floor(Math.random() * todosLivros.length)
         mostrarDestaque();
         mostrarLivros();
       } else {
-        livrosEl.innerContent = '<div class="carregando"><p>Nenhum livro encontrado</p></div>';
+        livrosEl.textContent = '<div class="carregando"><p>Nenhum livro encontrado</p></div>';
       }
     })
     .catch(function(error) {
       console.error('Erro ao carregar livros:', error);
-      livrosEl.innerHTML = '<div class="carregando"><p>Erro ao carregar livros</p></div>';
+      livrosEl.textContent = '<div class="carregando"><p>Erro ao carregar livros</p></div>';
     });
 }
 
@@ -84,7 +84,7 @@ function mostrarDestaque() {
   
   const { capa, titulo, autor, sinopse, genero = [], id } = livroEmDestaque;
   
-  destaqueEl.innerContent = `
+  destaqueEl.textContent = `
     <img src="${capa}" class="destaque-capa" alt="${titulo}">
     <div class="destaque-info">
       <h1 class="destaque-titulo">${titulo}</h1>
