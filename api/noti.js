@@ -16,6 +16,7 @@ Manda uma notificação zoeira pro app de livros indies Bookish.
 cuidado pra não mencionar outros apps que não seja o "Bookish". 
 Sem explicação, sem enrolação, só a mensagem pronta, como se tivesse vindo direto do sistema, e não pode ser igual a anterior.
 Estilo sarcástico, engraçado e criativo. Pode usar emoji, mas sem parecer notinha de rodapé de escola.
+tente ao máximo não ser repetitivo.
 E nem vem com “aqui está” ou qualquer introdução.`.trim();
 
   // 1. Gera mensagem zoeira com IA
