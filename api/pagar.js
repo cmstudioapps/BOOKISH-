@@ -1,6 +1,13 @@
 // api/pagar.js
 import mercadopago from "mercadopago";
 
+export const config = {
+  api: {
+    bodyParser: true, // garante que o req.body funcione na Vercel
+  },
+};
+
+
 mercadopago.configure({
   access_token: "APP_USR-5372909235281533-072608-2738659b389c47900db3b254d77ac826-2585436616", // substitui por teu token
 });
