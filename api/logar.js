@@ -12,7 +12,7 @@ export default function handler(req, res) {
   const url = "https://feed-78c44-default-rtdb.firebaseio.com/users";
   const { acao, nome, senha } = req.body || {}
   if (!acao || !nome || !senha) {
-    return res.status().json({message: "falta informacoes"})
+    return res.status(200).json({message: "falta informacoes"})
   }
   if (acao === "login") {
     fetch(`${url}/${nome}.json`)
