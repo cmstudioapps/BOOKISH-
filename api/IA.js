@@ -57,7 +57,7 @@ export default function handler(req, res) {
         else if(acao === "image") {
           const pre_prompt = `Observe o texto que eu desenvolvi até agora e gere uma imagem vertical atendendo também as minhas instruções, porém usando o texto como 'contexto'.\nMinhas instruções: ${instrucao}.\nMeu texto: ${contexto || "sem texto!"}`;
 
-          fetch(`https://api.spiderx.com.br/api/ai/pixart?text=${encodeURIComponent(pre_prompt)}&api_key=${API_KEY}`)
+          fetch(`https://api.spiderx.com.br/api/ai/flux?text=${encodeURIComponent(pre_prompt)}&api_key=${API_KEY}`)
           .then(response => response.json())
           .then(data => {
             res.status(200).json({ img: data.image });
