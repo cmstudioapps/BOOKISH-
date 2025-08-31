@@ -18,7 +18,7 @@ export default function handler(req, res) {
   if(!nome || !dataNascimento) {
 return res.status(200).json({resposta: "Ouve um erro."})
   }
-const pre_prompt = `Meu nome é ${nome}, nasci em ${dataNascimento}, O que acontecia nesse meu ano de nascimento, como o mundo estava? quais pessoas importantes tinham na epoca, quais eventos marcantes ocorreram? começe contanto em 3 anos antes destacando eventos ou pessoas importantes, e De forma poética conte tudo.`
+const pre_prompt = `Meu nome é ${nome}, nasci em ${dataNascimento}, O que acontecia nesse meu ano de nascimento, como o mundo estava? quais pessoas importantes tinham na epoca, quais eventos marcantes ocorreram? começe contanto em 3 anos antes destacando eventos ou pessoas importantes, e De forma poética conte tudo desde antes até durante o nascimento, tudo de forma poética e nostalgica.`
   fetch("https://api.spiderx.com.br/api/ai/gemini?api_key=inNJuHmF7ffkiZBxdN28", {
  method: "POST",
  headers: {
@@ -31,7 +31,7 @@ const pre_prompt = `Meu nome é ${nome}, nasci em ${dataNascimento}, O que acont
  .then((response) => response.json())
  .then((data) => {
 
- return res.status(200).json({resposta: data.response.replace("*","")})
+ return res.status(200).json({resposta: data.response.replace("*","\n")})
    
  }) 
 
