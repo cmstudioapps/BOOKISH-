@@ -31,7 +31,7 @@ const pre_prompt = `Meu nome é ${nome}, nasci em ${dataNascimento}, O que acont
  .then((response) => response.json())
  .then((data) => {
 
- return res.status(200).json({resposta: data.response})
+ return res.status(200).json({resposta: data.response.replace("*","")})
    
  }) 
 
