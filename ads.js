@@ -9,7 +9,7 @@ ZuniAds.init([
     once: false                // Se true, só mostra uma vez por usuário (opcional)
   },
   {
-    image: "https://ibb.co/230H5cx5",       // URL da imagem do anúncio (obrigatório)
+    image: "https://i.ibb.co/CKpDWVgW/Chat-GPT-Image-31-de-ago-de-2025-10-24-17.png",       // URL da imagem do anúncio (obrigatório)
     title: "Há 3 anos antes de voçê...",   // Título do anúncio (obrigatório)
     description: "A Bookish preparou uma Historia para voçẽ!!",  // Descrição do anúncio (obrigatório)
     link: "History.html",         // URL para redirecionar ao clicar (obrigatório)
