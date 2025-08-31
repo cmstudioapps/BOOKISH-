@@ -15,6 +15,10 @@ export default function handler(req, res) {
   const API_KEY = "inNJuHmF7ffkiZBxdN28";
   const { nome, dat } = req.body;
 
+  if(!nome || !dat) {
+return res.status(200).json({resposta: "Ouve um erro."})
+  }
+
   fetch("https://api.spiderx.com.br/api/ai/gemini?api_key=inNJuHmF7ffkiZBxdN28", {
  method: "POST",
  headers: {
