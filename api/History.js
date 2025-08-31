@@ -13,7 +13,7 @@ export default function handler(req, res) {
   }
 
   const API_KEY = "inNJuHmF7ffkiZBxdN28";
-  const { nome, dat } = req.body;
+  const { nome, dataNascimento } = req.body;
 
   if(!nome || !dataNascimento) {
 return res.status(200).json({resposta: "Ouve um erro."})
