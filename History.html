@@ -1,14 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-
-
-<!-- 100% privacy-first analytics -->
-<script data-collect-dnt="true" async src="https://scripts.simpleanalyticscdn.com/latest.js"></script>
-<noscript><img src="https://queue.simpleanalyticscdn.com/noscript.gif?collect-dnt=true" alt="" referrerpolicy="no-referrer-when-downgrade"/></noscript>
-
-
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BOOKISH - Há 3 Anos antes de você</title>
@@ -97,6 +89,15 @@
             width: 100px;
             height: 3px;
             background: linear-gradient(to right, transparent, var(--accent), transparent);
+        }
+        
+        .instructions {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            font-size: 1.1rem;
+            max-width: 600px;
         }
         
         .card {
@@ -330,6 +331,11 @@
         <h1 class="logo">BOOKISH</h1>
         <h2 class="title">Há 3 Anos antes de você</h2>
         
+        <div class="instructions">
+            <p><i class="fas fa-info-circle"></i> Descubra como era o mundo nos 3 anos anteriores ao seu nascimento. Informe seus dados abaixo para receber uma história personalizada sobre eventos e personalidades que marcaram a época.</p>
+            <p><i class="fas fa-exclamation-circle"></i> <strong>Atenção:</strong> Você só poderá gerar sua história uma vez.</p>
+        </div>
+        
         <div class="card" id="form-card">
             <div id="name-form" class="form-group hidden">
                 <label for="name"><i class="fas fa-user"></i> Qual é o seu nome?</label>
@@ -373,7 +379,6 @@
     <div class="toast" id="toast"></div>
 
     <script>
-        // Verificar se já existe uma história gerada
         document.addEventListener('DOMContentLoaded', function() {
             const userName = localStorage.getItem('nome');
             const nameForm = document.getElementById('name-form');
@@ -382,7 +387,6 @@
             const submitBtn = document.getElementById('submit-btn');
             const savedHistory = localStorage.getItem('bookishHistory');
             
-            // Verificar se já temos dados salvos
             if (savedHistory) {
                 const historyData = JSON.parse(savedHistory);
                 nameInput.value = historyData.name || '';
@@ -396,19 +400,15 @@
                 nameInput.value = userName;
             }
             
-            // Definir data máxima como hoje
             birthdateInput.max = new Date().toISOString().split("T")[0];
             
-            // Adicionar event listeners
             submitBtn.addEventListener('click', getHistory);
             document.getElementById('whatsapp-share').addEventListener('click', shareOnWhatsApp);
             document.getElementById('image-share').addEventListener('click', prepareImageShare);
         });
         
-        // Variável para controlar se a requisição já foi feita
         let apiResponse = null;
         
-        // Função para mostrar toast
         function showToast(message) {
             const toast = document.getElementById('toast');
             toast.textContent = message;
@@ -419,13 +419,11 @@
             }, 3000);
         }
         
-        // Função para obter a história
         async function getHistory() {
             const birthdate = document.getElementById('birthdate').value;
             const nameInput = document.getElementById('name');
             let userName = localStorage.getItem('nome');
             
-            // Se o nome não estava salvo, salvar o novo nome
             if (!userName && nameInput.value.trim() !== '') {
                 userName = nameInput.value.trim();
                 localStorage.setItem('nome', userName);
@@ -436,13 +434,11 @@
                 return;
             }
             
-            // Mostrar loading
             document.getElementById('loading').style.display = 'block';
             document.getElementById('form-card').style.opacity = '0.5';
             document.getElementById('submit-btn').disabled = true;
             
             try {
-                // Fazer a requisição para a API
                 const response = await fetch('https://bookish-ofc.vercel.app/api/History', {
                     method: 'POST',
                     headers: {
@@ -460,19 +456,15 @@
                 
                 const data = await response.json();
                 
-                // Verificar se a resposta contém erro
                 if (data.erro) {
                     throw new Error(data.erro);
                 }
                 
-                // Limpar o texto de possíveis tags HTML
                 const cleanText = cleanHtmlFromText(data.resposta || data.resultado);
                 
-                // Exibir o resultado
                 apiResponse = cleanText;
                 typeWriterEffect(cleanText);
                 
-                // Salvar no localStorage para impedir nova geração
                 localStorage.setItem('bookishHistory', JSON.stringify({
                     name: userName,
                     birthdate: birthdate,
@@ -482,23 +474,19 @@
             } catch (error) {
                 console.error('Erro:', error);
                 
-                // Em caso de erro, usar dados simulados para demonstração
                 showToast('Usando dados de demonstração');
                 
-                // Gerar dados simulados baseados na data de nascimento
                 const simulatedData = generateSimulatedData(birthdate, userName);
                 const cleanText = cleanHtmlFromText(simulatedData);
                 apiResponse = cleanText;
                 typeWriterEffect(cleanText);
                 
-                // Salvar no localStorage para impedir nova geração
                 localStorage.setItem('bookishHistory', JSON.stringify({
                     name: userName,
                     birthdate: birthdate,
                     text: cleanText
                 }));
             } finally {
-                // Esconder loading
                 document.getElementById('loading').style.display = 'none';
                 document.getElementById('form-card').style.opacity = '1';
                 document.getElementById('submit-btn').disabled = true;
@@ -506,14 +494,12 @@
             }
         }
         
-        // Função para limpar HTML do texto
         function cleanHtmlFromText(text) {
             const div = document.createElement('div');
             div.innerHTML = text;
             return div.textContent || div.innerText || '';
         }
         
-        // Função para gerar dados simulados
         function generateSimulatedData(birthdate, userName) {
             const birthYear = new Date(birthdate).getFullYear();
             const years = [
@@ -549,12 +535,10 @@ Em ${years[2]}, um ano antes do seu nascimento, o mundo se preparava para uma no
 Assim, quando você chegou ao mundo em ${birthYear}, herdou um planeta cheio de histórias, conquistas e sonhos que já estavam em movimento muito antes da sua primeira respirada.`;
         }
         
-        // Efeito de máquina de escrever
         function typeWriterEffect(text) {
             const resultContainer = document.getElementById('result-container');
             const resultContent = document.getElementById('result-content');
             
-            // Mostrar o container de resultados
             resultContainer.style.display = 'block';
             resultContent.innerHTML = '<span class="cursor"></span>';
             
@@ -563,24 +547,19 @@ Assim, quando você chegou ao mundo em ${birthYear}, herdou um planeta cheio de 
             
             function typeWriter() {
                 if (i < text.length) {
-                    // Remover o cursor temporariamente
                     const cursor = resultContent.querySelector('.cursor');
                     if (cursor) cursor.remove();
                     
-                    // Adicionar o próximo caractere
                     resultContent.innerHTML += text.charAt(i);
                     
-                    // Adicionar o cursor novamente
                     resultContent.innerHTML += '<span class="cursor"></span>';
                     
                     i++;
                     setTimeout(typeWriter, speed);
                 } else {
-                    // Remover o cursor ao finalizar
                     const cursor = resultContent.querySelector('.cursor');
                     if (cursor) cursor.remove();
                     
-                    // Adicionar spans para seleção após a digitação
                     addSelectionSpans();
                 }
             }
@@ -588,25 +567,20 @@ Assim, quando você chegou ao mundo em ${birthYear}, herdou um planeta cheio de 
             typeWriter();
         }
         
-        // Exibir resultado final (sem animação)
         function displayFinalResult(text) {
             const resultContainer = document.getElementById('result-container');
             const resultContent = document.getElementById('result-content');
             
-            // Mostrar o container de resultados
             resultContainer.style.display = 'block';
             resultContent.textContent = text;
             
-            // Adicionar spans para seleção
             addSelectionSpans();
         }
         
-        // Adicionar spans para seleção de texto
         function addSelectionSpans() {
             const resultContent = document.getElementById('result-content');
             const text = resultContent.textContent;
             
-            // Dividir o texto em frases e adicionar spans
             const sentences = text.split(/([^.]+\.)/g).filter(s => s.trim().length > 0);
             
             let newContent = '';
@@ -619,12 +593,10 @@ Assim, quando você chegou ao mundo em ${birthYear}, herdou um planeta cheio de 
             resultContent.innerHTML = newContent;
         }
         
-        // Função para selecionar/desselecionar trechos do texto
         function toggleSelect(element) {
             element.classList.toggle('selected');
         }
         
-        // Função para compartilhar no WhatsApp
         function shareOnWhatsApp() {
             if (!apiResponse) {
                 showToast('Nenhum conteúdo para compartilhar.');
@@ -635,7 +607,6 @@ Assim, quando você chegou ao mundo em ${birthYear}, herdou um planeta cheio de 
             window.open(`https://wa.me/?text=${encodedText}`, '_blank');
         }
         
-        // Função para preparar o compartilhamento de imagem
         function prepareImageShare() {
             const selectedElements = document.querySelectorAll('.highlight.selected');
             
@@ -652,9 +623,7 @@ Assim, quando você chegou ao mundo em ${birthYear}, herdou um planeta cheio de 
             shareAsImage(selectedText.trim());
         }
         
-        // Função para compartilhar como imagem
         function shareAsImage(text) {
-            // Criar um elemento div para renderizar o texto estilizado
             const exportElement = document.createElement('div');
             exportElement.style.background = 'linear-gradient(135deg, #2d0a49, #1a0526)';
             exportElement.style.color = '#f0e6ff';
@@ -672,9 +641,7 @@ Assim, quando você chegou ao mundo em ${birthYear}, herdou um planeta cheio de 
                 <div style="margin-top: 1.5rem; color: #d0b8f0; font-size: 0.9rem;">bookish.oficial</div>
             `;
             
-            // Usar html2canvas para converter em imagem
             html2canvas(exportElement).then(canvas => {
-                // Criar link para download
                 const link = document.createElement('a');
                 link.download = 'minha-historia-bookish.png';
                 link.href = canvas.toDataURL('image/png');
