@@ -427,7 +427,7 @@ const readerConfig = {
       .map(paragrafo => paragrafo.trim() ? `<p>${paragrafo}</p>` : '')
       .join('');
 
-    this.conteudoEl.innerHTML = conteudoFormatado;
+    this.conteudoEl.innerHTML =  marked.parse(livroData.conteudo)
   },
 
   setupControles: function() {
