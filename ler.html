@@ -424,11 +424,9 @@ const readerConfig = {
     document.getElementById('livro-titulo').textContent = this.livroData.titulo;
     document.getElementById('livro-autor').textContent = this.livroData.autor;
 
-    const conteudoFormatado = this.livroData.conteudo.split('\n')
-      .map(paragrafo => paragrafo.trim() ? `<p>${paragrafo}</p>` : '')
-      .join('');
-const Mark = marked.parse(livroData.conteudo)
-    this.conteudoEl.innerHTML =  Mark
+  const Mark = marked.parse(this.livroData.conteudo);
+this.conteudoEl.innerHTML = Mark;
+
   },
 
   setupControles: function() {
