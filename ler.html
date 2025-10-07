@@ -427,8 +427,8 @@ const readerConfig = {
     const conteudoFormatado = this.livroData.conteudo.split('\n')
       .map(paragrafo => paragrafo.trim() ? `<p>${paragrafo}</p>` : '')
       .join('');
-
-    this.conteudoEl.innerHTML =  marked.parse(conteudoFormatado)
+const Mark = marked.parse(conteudoFormatado)
+    this.conteudoEl.innerHTML =  Mark
   },
 
   setupControles: function() {
